@@ -77,15 +77,15 @@ body.title-page{
   display:flex;
   flex-direction:column;
 }
-body.title-page header{ padding-top:96px; }
-body.title-page footer{ padding-bottom:88px; }
+body.title-page header{ padding-top:48px; }
+body.title-page footer{ padding-bottom:64px; }
 .hero-title{
   flex:1 1 auto;
   display:flex;
   align-items:center;
   justify-content:center;
   min-height:0;
-  padding:48px 0;
+  padding:24px 0;
 }
 .hero .kicker{ font-family:var(--display); font-style:italic; font-size:17px; color:var(--ink-faint); margin-bottom:18px; }
 .hero h1{ font-size:clamp(36px,6vw,56px); line-height:1.12; margin-bottom:26px; }
