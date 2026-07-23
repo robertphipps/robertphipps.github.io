@@ -77,7 +77,7 @@ body.title-page{
   display:flex;
   flex-direction:column;
 }
-body.title-page header{ padding-top:24px; }
+body.title-page header{ padding-top:48px; }
 body.title-page footer{ padding-bottom:64px; }
 .hero-title{
   flex:1 1 auto;
