@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>[Your Name] — Technical Writer</title>
+<meta name="description" content="Technical writing portfolio.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;1,500;1,600&family=EB+Garamond:ital,wght@0,400;0,500;0,600;1,400&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<header>
+  <div class="masthead">
+    <a class="brand" href="index.html">[Your Name]</a>
+    <hr class="rule">
+    <ul class="nav-links">
+      <li><a href="about.html">About</a></li>
+      <li><a href="portfolio.html">Portfolio</a></li>
+      <li><a href="resume.html">Résumé</a></li>
+      <li><a href="contact.html">Contact</a></li>
+    </ul>
+  </div>
+</header>
+
+<section class="hero">
+  <div class="wrap">
+    <div class="kicker">A Portfolio in Technical Writing</div>
+    <h1>Documentation people actually finish reading.</h1>
+    <p class="epigraph">
+      “Clarity is not the absence of complexity, but the discipline of ordering it.”
+      <cite>— On the craft of the guide</cite>
+    </p>
+  </div>
+</section>
+
+<hr class="rule">
+
+<main>
+  <div class="wrap">
+    <nav class="toc" aria-label="Table of contents">
+      <div class="toc-item">
+        <span class="num">I.</span>
+        <a class="toc-title" href="about.html">About</a>
+        <span class="toc-leader"></span>
+        <span class="desc">Background &amp; focus</span>
+      </div>
+      <div class="toc-item">
+        <span class="num">II.</span>
+        <a class="toc-title" href="portfolio.html">Portfolio</a>
+        <span class="toc-leader"></span>
+        <span class="desc">Selected writing samples</span>
+      </div>
+      <div class="toc-item">
+        <span class="num">III.</span>
+        <a class="toc-title" href="resume.html">Résumé</a>
+        <span class="toc-leader"></span>
+        <span class="desc">Experience &amp; skills</span>
+      </div>
+      <div class="toc-item">
+        <span class="num">IV.</span>
+        <a class="toc-title" href="contact.html">Correspondence</a>
+        <span class="toc-leader"></span>
+        <span class="desc">Get in touch</span>
+      </div>
+    </nav>
+  </div>
+</main>
+
+<footer>
+  <div class="flourish"><hr class="rule"><span>§</span><hr class="rule"></div>
+  <div class="colophon">Set in Cormorant Garamond &amp; EB Garamond — © <span id="year"></span> [Your Name]</div>
+</footer>
+
+<script>document.getElementById('year').textContent = new Date().getFullYear();</script>
+</body>
+</html>
