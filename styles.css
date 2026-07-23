@@ -152,6 +152,17 @@ blockquote.excerpt{
 footer{ max-width:var(--max); margin:0 auto; padding:36px 44px 56px; text-align:center; }
 footer .colophon{ font-family:var(--display); font-style:italic; font-size:14px; color:var(--ink-faint); margin-top:16px; }
 
+/* ============ PAGE TRANSITIONS ============ */
+@media not (prefers-reduced-motion: reduce){
+  @view-transition{ navigation: auto; }
+
+  ::view-transition-old(root){ animation: page-out .32s ease both; }
+  ::view-transition-new(root){ animation: page-in .38s ease both; }
+
+  @keyframes page-out{ to{ opacity:0; transform:translateY(-10px); } }
+  @keyframes page-in{ from{ opacity:0; transform:translateY(10px); } }
+}
+
 /* ============ RESPONSIVE ============ */
 @media (max-width:560px){
   .wrap, .masthead, footer{ padding-left:26px; padding-right:26px; }
