@@ -16,6 +16,13 @@
 *{ box-sizing:border-box; }
 html{
   scroll-behavior:smooth;
+  /* Keeps the gutter reserved even on pages that don't need to scroll
+     (like the no-scroll title page), so the viewport's usable width
+     stays constant across pages. Without this, the centered masthead
+     shifts by the scrollbar's width whenever you navigate between a
+     scrolling page and a non-scrolling one — which is what was causing
+     the jump/overlap during the pinned masthead transition. */
+  scrollbar-gutter: stable;
   /* Fluid type scale: root font-size flows between 14px (narrow phones)
      and 19px (the original desktop body size), so every element below
      that's sized in rem scales together in lockstep with the viewport. */
