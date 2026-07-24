@@ -293,12 +293,14 @@ footer .colophon{ font-family:var(--display); font-style:italic; font-size:0.737
      across the navigation, then we strip that group's animation so it
      just stays put instead of fading with the rest of the page. */
   header{ view-transition-name: masthead; }
-  ::view-transition-group(masthead),
-  ::view-transition-old(masthead),
-  ::view-transition-new(masthead){
-    animation: none;
-    mix-blend-mode: normal;
-  }
+  ::view-transition-group(masthead){ animation: none; }
+  /* Hide the outgoing masthead snapshot immediately rather than leaving
+     it stacked at full opacity under the new one — with both old and
+     new visible for the transition's duration, the un-animated pair
+     rendered on top of each other, which is what made the masthead
+     look doubled/thicker for a moment. */
+  ::view-transition-old(masthead){ display: none; }
+  ::view-transition-new(masthead){ animation: none; mix-blend-mode: normal; }
 
   /* JS fallback (browsers without native cross-document view-transitions) */
   html.vt-fallback header{ opacity:1; transform:none; }
