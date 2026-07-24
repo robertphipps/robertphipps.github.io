@@ -144,7 +144,7 @@ body.title-page footer{ padding-bottom:var(--footer-pb, clamp(48px, 20vh, 244px)
 /* No-scroll mode only engages once the window is comfortably large in both
    dimensions. Below this range the page falls back to full, uncompressed
    spacing and normal scrolling — never a partial squeeze. */
-@media (min-width:700px) and (min-height:920px){
+@media (min-width:700px) and (min-height:880px){
   html:has(body.title-page){ height:100%; overflow:hidden; }
   body.title-page{
     height:100svh;
