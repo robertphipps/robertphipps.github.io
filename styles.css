@@ -154,6 +154,17 @@ body.title-page footer{ padding-bottom:var(--footer-pb, clamp(48px, 20vh, 244px)
     --footer-pb: clamp(20px, 7vh, 220px);
   }
 }
+
+/* CSS can't detect physical monitor resolution directly, so this uses a wide
+   viewport as a proxy: a browser window this wide is realistically only
+   possible on a large/high-resolution display. If the browser isn't
+   maximized, this won't trigger even on a high-res screen — there's no way
+   around that limitation with CSS alone. The vh cap is kept so this can
+   never reopen the no-scroll overlap issue if it happens to coincide with
+   the compact layout above. */
+@media (min-width:2000px){
+  body.title-page{ --frontispiece-w: min(340px, 34vh, 78%); }
+}
 .btn{ font-family:var(--body); font-size:0.789rem; text-decoration:none; padding:10px 4px; border-bottom:1px solid var(--ink); }
 .btn:hover{ border-color:var(--accent); color:var(--accent); }
 
