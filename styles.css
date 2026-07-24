@@ -281,11 +281,28 @@ footer .colophon{ font-family:var(--display); font-style:italic; font-size:0.737
   @keyframes page-out{ to{ opacity:0; transform:translateY(-10px); } }
   @keyframes page-in{ from{ opacity:0; transform:translateY(10px); } }
 
+  /* Exempt the masthead from the page transition — it gets its own
+     named view-transition-group so the browser tracks it as continuous
+     across the navigation, then we strip that group's animation so it
+     just stays put instead of fading with the rest of the page. */
+  header{ view-transition-name: masthead; }
+  ::view-transition-group(masthead),
+  ::view-transition-old(masthead),
+  ::view-transition-new(masthead){
+    animation: none;
+    mix-blend-mode: normal;
+  }
+
   /* JS fallback (browsers without native cross-document view-transitions) */
-  html.vt-fallback{ opacity:0; }
-  html.vt-fallback.fade-in{ opacity:1; transform:translateY(0); transition:opacity .3s ease, transform .34s ease; }
-  html.vt-fallback.fade-out{ opacity:0; transform:translateY(-10px); transition:opacity .26s ease, transform .28s ease; }
+  html.vt-fallback header{ opacity:1; transform:none; }
+  html.vt-fallback main,
+  html.vt-fallback footer{ opacity:0; }
+  html.vt-fallback.fade-in main,
+  html.vt-fallback.fade-in footer{ opacity:1; transform:translateY(0); transition:opacity .3s ease, transform .34s ease; }
+  html.vt-fallback.fade-out main,
+  html.vt-fallback.fade-out footer{ opacity:0; transform:translateY(-10px); transition:opacity .26s ease, transform .28s ease; }
 }
+
 @media (prefers-reduced-motion: reduce){
   html.vt-fallback{ opacity:1; }
 }
