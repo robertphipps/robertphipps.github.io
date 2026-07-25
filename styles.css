@@ -61,7 +61,7 @@ h1,h2{ font-family:var(--display); font-weight:600; margin:0; }
 
 /* ============ MASTHEAD ============ */
 header{ padding:clamp(48px, 8vh, 244px) 0 0; }
-.masthead{ max-width:var(--max); margin:0 auto; padding:0 44px 28px; text-align:center; }
+.masthead{ max-width:var(--max); margin:0 auto; padding:0 44px var(--masthead-pb, 28px); text-align:center; }
 .masthead .brand{
   font-family:var(--display); font-size:0.789rem; letter-spacing:.22em; text-transform:uppercase;
   color:var(--ink-soft); margin-bottom:var(--brand-mb, 16px); text-decoration:none; display:inline-block;
@@ -127,8 +127,8 @@ body.title-page{
   display:flex;
   flex-direction:column;
 }
-body.title-page main{ padding-top:var(--main-pt, 40px); padding-bottom:var(--main-pb, 100px); }
-body.title-page footer{ padding-bottom:var(--footer-pb, clamp(48px, 20vh, 244px)); }
+body.title-page main{ padding-top:var(--main-pt, 24px); padding-bottom:var(--main-pb, 48px); }
+body.title-page footer{ padding-bottom:var(--footer-pb, 56px); }
 .hero-title{
   flex:1 1 auto;
   display:flex;
@@ -136,7 +136,7 @@ body.title-page footer{ padding-bottom:var(--footer-pb, clamp(48px, 20vh, 244px)
   justify-content:center;
   min-height:0;
   overflow:hidden;
-  padding:var(--hero-pad, clamp(12px, 3vh, 32px)) 0;
+  padding:var(--hero-pad, 24px) 0;
 }
 .hero .kicker{ font-family:var(--display); font-style:italic; font-weight:600; font-size:0.895rem; color:var(--ink-faint); margin-bottom:18px; }
 .hero h1{ font-family:'Cormorant Garamond', 'Times New Roman', serif; font-size:var(--h1-size, clamp(44px, 7.5vw, 72px)); line-height:1.12; margin-bottom:var(--h1-mb, 26px); font-weight:600; }
@@ -144,7 +144,7 @@ body.title-page footer{ padding-bottom:var(--footer-pb, clamp(48px, 20vh, 244px)
 /* No-scroll mode only engages once the window is comfortably large in both
    dimensions. Below this range the page falls back to full, uncompressed
    spacing and normal scrolling — never a partial squeeze. */
-@media (min-width:700px) and (min-height:880px){
+@media (min-width:700px) and (min-height:920px){
   html:has(body.title-page){ height:100%; overflow:hidden; }
   body.title-page{
     height:100svh;
@@ -159,6 +159,31 @@ body.title-page footer{ padding-bottom:var(--footer-pb, clamp(48px, 20vh, 244px)
     --main-pt: clamp(12px, 2vh, 40px);
     --main-pb: clamp(20px, 5vh, 100px);
     --footer-pb: clamp(20px, 7vh, 220px);
+  }
+}
+
+/* Much tighter tier for shorter laptop viewports (e.g. a 13" MacBook Pro,
+   ~730-900px of usable viewport height once browser chrome is subtracted).
+   Everything shrinks further here — smaller photo, smaller name, tighter
+   spacing throughout — to fit without scrolling on a genuinely small budget. */
+@media (min-width:700px) and (min-height:700px) and (max-height:919px){
+  html:has(body.title-page){ height:100%; overflow:hidden; }
+  body.title-page{
+    height:100svh;
+    overflow:hidden;
+    --masthead-pb: clamp(8px, 2vh, 20px);
+    --brand-mb: clamp(4px, 1vh, 10px);
+    --nav-mt: clamp(4px, 1vh, 10px);
+    --frontispiece-w: min(260px, 30vh, 68%);
+    --frontispiece-mb: clamp(8px, 2vh, 16px);
+    --h1-size: clamp(24px, min(6vw, 6vh), 44px);
+    --h1-mb: clamp(8px, 1.8vh, 16px);
+    --hero-pad: clamp(2px, 0.5vh, 10px);
+    --main-pt: clamp(4px, 0.8vh, 16px);
+    --main-pb: clamp(8px, 2vh, 40px);
+    --footer-pt: clamp(8px, 2vh, 28px);
+    --colophon-mt: clamp(4px, 1vh, 12px);
+    --footer-pb: clamp(10px, 3vh, 100px);
   }
 }
 
@@ -275,8 +300,8 @@ blockquote.excerpt{
 }
 .contact-links a:hover{ border-color:var(--accent); color:var(--accent); }
 
-footer{ max-width:var(--max); margin:0 auto; padding:36px 44px 56px; text-align:center; }
-footer .colophon{ font-family:var(--display); font-style:italic; font-size:0.737rem; color:var(--ink-faint); margin-top:16px; }
+footer{ max-width:var(--max); margin:0 auto; padding:var(--footer-pt, 36px) 44px 56px; text-align:center; }
+footer .colophon{ font-family:var(--display); font-style:italic; font-size:0.737rem; color:var(--ink-faint); margin-top:var(--colophon-mt, 16px); }
 
 /* ============ PAGE TRANSITIONS ============ */
 @media not (prefers-reduced-motion: reduce){
