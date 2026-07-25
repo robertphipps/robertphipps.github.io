@@ -171,9 +171,6 @@ body.title-page footer{ padding-bottom:var(--footer-pb, 56px); }
   body.title-page{
     height:100svh;
     overflow:hidden;
-    --masthead-pb: clamp(8px, 2vh, 20px);
-    --brand-mb: clamp(4px, 1vh, 10px);
-    --nav-mt: clamp(4px, 1vh, 10px);
     --frontispiece-w: min(300px, 34vh, 72%);
     --frontispiece-mb: clamp(8px, 2vh, 16px);
     --h1-size: clamp(30px, min(7vw, 7vh), 52px);
