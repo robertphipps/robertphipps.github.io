@@ -174,9 +174,9 @@ body.title-page footer{ padding-bottom:var(--footer-pb, 56px); }
     --masthead-pb: clamp(8px, 2vh, 20px);
     --brand-mb: clamp(4px, 1vh, 10px);
     --nav-mt: clamp(4px, 1vh, 10px);
-    --frontispiece-w: min(260px, 30vh, 68%);
+    --frontispiece-w: min(300px, 34vh, 72%);
     --frontispiece-mb: clamp(8px, 2vh, 16px);
-    --h1-size: clamp(24px, min(6vw, 6vh), 44px);
+    --h1-size: clamp(28px, min(6.5vw, 6.5vh), 48px);
     --h1-mb: clamp(8px, 1.8vh, 16px);
     --hero-pad: clamp(2px, 0.5vh, 10px);
     --main-pt: clamp(4px, 0.8vh, 16px);
