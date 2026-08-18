@@ -1,16 +1,22 @@
 :root{
   --paper:      #FFFFFF;
   --paper-alt:  #F7F5F0;
-  --ink:        #2B241D;
-  --ink-soft:   #5C5142;
-  --ink-faint:  #8C816E;
-  --line:       #D9CCAF;
+  --ink:        #111111;
+  --ink-soft:   #4D4D4D;
+  --ink-faint:  #8C8C8C;
+  --line:       #D9D9D9;
   --accent:     #874141;
 
-  --display: 'Crimson Pro', 'Times New Roman', serif;
-  --body:    'Crimson Pro', 'Times New Roman', serif;
+  --display: 'Work Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif;
+  --body:    'Work Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif;
 
   --max: 660px;
+  /* .wrap's max-width minus its 44px left/right padding — the real ceiling
+     any centered content inside it can hit before it overflows and breaks
+     centering (see the frontispiece overflow bug at >=2000px). Every
+     --frontispiece-w value below is wrapped in min(..., var(--frontispiece-cap))
+     so raising these numbers can't reintroduce that bug. */
+  --frontispiece-cap: calc(var(--max) - 88px);
 }
 
 *{ box-sizing:border-box; }
@@ -37,14 +43,15 @@ body{
   background:var(--paper);
   color:var(--ink);
   font-family:var(--body);
-  font-size:1rem;
+  font-size:0.82rem;
+  font-weight:400;
   line-height:1.7;
 }
 
 a{ color:inherit; }
 .wrap{ max-width:var(--max); margin:0 auto; padding:0 44px; }
 
-h1,h2{ font-family:var(--display); font-weight:600; margin:0; }
+h1,h2{ font-family:var(--display); font-weight:500; margin:0; }
 
 .small-caps{
   font-family:var(--body);
@@ -54,62 +61,72 @@ h1,h2{ font-family:var(--display); font-weight:600; margin:0; }
   color:var(--ink-faint);
 }
 
-.rule{ border:none; border-top:1px solid var(--line); margin:0; width:100%; }
-.flourish{ display:flex; align-items:center; justify-content:center; gap:14px; margin:0; color:var(--ink-faint); }
-.flourish .rule{ flex:1; }
-.flourish span{ font-family:var(--display); font-size:0.789rem; }
-
 /* ============ MASTHEAD ============ */
 header{ padding:clamp(48px, 8vh, 244px) 0 0; }
 .masthead{ max-width:var(--max); margin:0 auto; padding:0 44px var(--masthead-pb, 28px); text-align:center; }
 .masthead .brand{
-  font-family:var(--display); font-size:0.789rem; letter-spacing:.22em; text-transform:uppercase;
-  color:var(--ink-soft); margin-bottom:var(--brand-mb, 16px); text-decoration:none; display:inline-block;
+  font-family:var(--display); font-size:1.8rem; font-weight:600; letter-spacing:.28em; text-transform:uppercase;
+  color:var(--ink); margin-bottom:var(--brand-mb, 16px); text-decoration:none; display:inline-block;
+  /* letter-spacing adds a trailing gap after the last character that gets
+     counted in the box's width for centering purposes, even though it has
+     no visible ink. That phantom gap was pushing the visible wordmark left
+     of true center (making everything else below it — like the frontispiece
+     photo — look off-center to the right by comparison). Pulling the box in
+     by one letter-spacing unit cancels the trailing gap so centering is
+     based on the actual glyphs. */
+  margin-right:-0.28em;
 }
 .masthead .brand:hover{ color:var(--accent); }
 .frontispiece-wrap{
-  display:inline-block;
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
   position:relative;
-  width:var(--frontispiece-w, min(280px, 70%));
   margin:0 auto var(--frontispiece-mb, 30px);
   border:1px solid var(--line);
   padding:6px;
   background:var(--paper);
-  overflow:hidden;
+  cursor:pointer;
 }
 .frontispiece{
   display:block;
-  width:100%;
+  max-width:var(--frontispiece-w, min(460px, 75vw, var(--frontispiece-cap)));
+  max-height:var(--frontispiece-max-h, 58vh);
+  width:auto;
+  height:auto;
 }
 .frontispiece-caption{
   position:absolute;
   left:6px;
   right:6px;
   bottom:6px;
-  transform:translateY(100%);
-  text-align:center;
-  background:var(--ink);
+  margin:0;
+  padding:8px 10px;
+  background:rgba(20, 16, 12, .72);
   color:var(--paper);
   font-family:var(--body);
-  font-style:normal;
   font-size:0.684rem;
-  letter-spacing:.03em;
-  padding:8px 14px;
+  line-height:1.4;
+  letter-spacing:.01em;
+  text-align:center;
   opacity:0;
-  pointer-events:none;
+  transform:translateY(4px);
   transition:opacity .2s ease, transform .2s ease;
+  pointer-events:none;
 }
 .frontispiece-caption em{ font-family:var(--display); font-style:italic; }
 .frontispiece-wrap:hover .frontispiece-caption{
   opacity:1;
   transform:translateY(0);
 }
-.nav-links{ display:flex; justify-content:center; gap:0; list-style:none; margin:var(--nav-mt, 16px) 0 0; padding:0; flex-wrap:wrap; }
+@media (hover:none){
+  .frontispiece-caption{ display:none; }
+}
+.nav-links{ display:flex; justify-content:center; gap:40px; list-style:none; margin:var(--nav-mt, 16px) 0 0; padding:0; flex-wrap:wrap; }
 .nav-links li{ display:flex; align-items:center; }
-.nav-links li + li::before{ content:"·"; margin:0 20px; color:var(--ink-faint); }
 .nav-links a{
-  font-family:var(--body); font-size:0.947rem; letter-spacing:.1em; text-transform:uppercase;
-  text-decoration:none; color:var(--ink-soft);
+  font-family:var(--body); font-size:0.75rem; letter-spacing:.1em; text-transform:uppercase;
+  text-decoration:none; color:var(--ink);
 }
 .nav-links a:hover, .nav-links a[aria-current="page"]{ color:var(--accent); }
 
@@ -127,7 +144,7 @@ body.title-page{
   display:flex;
   flex-direction:column;
 }
-body.title-page main{ padding-top:var(--main-pt, 24px); padding-bottom:var(--main-pb, 48px); }
+body.title-page main{ padding-top:var(--main-pt, 14px); padding-bottom:var(--main-pb, 48px); }
 body.title-page footer{ padding-bottom:var(--footer-pb, 56px); }
 .hero-title{
   flex:1 1 auto;
@@ -138,8 +155,13 @@ body.title-page footer{ padding-bottom:var(--footer-pb, 56px); }
   overflow:hidden;
   padding:var(--hero-pad, 24px) 0;
 }
-.hero .kicker{ font-family:var(--display); font-style:italic; font-weight:600; font-size:0.895rem; color:var(--ink-faint); margin-bottom:18px; }
-.hero h1{ font-family:'Cormorant Garamond', 'Times New Roman', serif; font-size:var(--h1-size, clamp(44px, 7.5vw, 72px)); line-height:1.12; margin-bottom:var(--h1-mb, 26px); font-weight:600; }
+/* Force the wrap to the same full width used everywhere else (masthead,
+   résumé, portfolio links), instead of letting it shrink-to-fit as a flex
+   item. This keeps the hero image centered via the exact same box math as
+   the rest of the page, rather than a separate flexbox calculation. */
+.hero-title > .wrap{ width:100%; }
+.hero .kicker{ font-family:var(--display); font-style:italic; font-weight:500; font-size:0.895rem; color:var(--ink-faint); margin-bottom:18px; }
+.hero h1{ font-family:var(--display); font-size:var(--h1-size, clamp(44px, 7.5vw, 72px)); line-height:1.12; margin-bottom:var(--h1-mb, 26px); font-weight:500; }
 
 /* No-scroll mode only engages once the window is comfortably large in both
    dimensions. Below this range the page falls back to full, uncompressed
@@ -151,12 +173,13 @@ body.title-page footer{ padding-bottom:var(--footer-pb, 56px); }
     overflow:hidden;
     --brand-mb: clamp(8px, 2vh, 16px);
     --nav-mt: clamp(8px, 2vh, 16px);
-    --frontispiece-w: min(280px, 32vh, 70%);
-    --frontispiece-mb: clamp(14px, 3vh, 30px);
-    --h1-size: clamp(32px, min(7.5vw, 8vh), 72px);
-    --h1-mb: clamp(12px, 2.5vh, 26px);
-    --hero-pad: clamp(8px, 1.5vh, 32px);
-    --main-pt: clamp(12px, 2vh, 40px);
+    --frontispiece-w: min(560px, 72vw, var(--frontispiece-cap));
+    --frontispiece-max-h: 40vh;
+    --frontispiece-mb: clamp(10px, 2vh, 22px);
+    --h1-size: clamp(28px, min(6.5vw, 6.5vh), 60px);
+    --h1-mb: clamp(8px, 1.8vh, 18px);
+    --hero-pad: clamp(6px, 1vh, 24px);
+    --main-pt: clamp(8px, 1.6vh, 28px);
     --main-pb: clamp(20px, 5vh, 100px);
     --footer-pb: clamp(20px, 7vh, 220px);
   }
@@ -171,12 +194,13 @@ body.title-page footer{ padding-bottom:var(--footer-pb, 56px); }
   body.title-page{
     height:100svh;
     overflow:hidden;
-    --frontispiece-w: min(300px, 34vh, 72%);
-    --frontispiece-mb: clamp(8px, 2vh, 16px);
-    --h1-size: clamp(30px, min(7vw, 7vh), 52px);
-    --h1-mb: clamp(8px, 1.8vh, 16px);
-    --hero-pad: clamp(2px, 0.5vh, 10px);
-    --main-pt: clamp(4px, 0.8vh, 16px);
+    --frontispiece-w: min(500px, 70vw, var(--frontispiece-cap));
+    --frontispiece-max-h: 42vh;
+    --frontispiece-mb: clamp(6px, 1.5vh, 12px);
+    --h1-size: clamp(26px, min(6vw, 5.5vh), 42px);
+    --h1-mb: clamp(6px, 1.4vh, 12px);
+    --hero-pad: clamp(4px, 0.8vh, 14px);
+    --main-pt: clamp(6px, 1vh, 16px);
     --main-pb: clamp(8px, 2vh, 40px);
     --footer-pt: clamp(8px, 2vh, 28px);
     --colophon-mt: clamp(4px, 1vh, 12px);
@@ -192,7 +216,13 @@ body.title-page footer{ padding-bottom:var(--footer-pb, 56px); }
    never reopen the no-scroll overlap issue if it happens to coincide with
    the compact layout above. */
 @media (min-width:2000px){
-  body.title-page{ --frontispiece-w: min(340px, 34vh, 78%); }
+  /* Capped at (var(--max) - 88px) — the .wrap's max-width minus its 44px
+     left/right padding — so the image can never render wider than the box
+     it's centered inside. Going wider than that caused the frontispiece to
+     overflow .wrap, which broke centering (confirmed via getBoundingClientRect:
+     the wrap stayed correctly centered, but the overflowing frontispiece-wrap
+     did not). */
+  body.title-page{ --frontispiece-w: min(600px, 65vw, var(--frontispiece-cap)); --frontispiece-max-h: 42vh; }
 }
 .btn{ font-family:var(--body); font-size:0.789rem; text-decoration:none; padding:10px 4px; border-bottom:1px solid var(--ink); }
 .btn:hover{ border-color:var(--accent); color:var(--accent); }
@@ -200,14 +230,14 @@ body.title-page footer{ padding-bottom:var(--footer-pb, 56px); }
 /* ============ SECTION SCAFFOLD ============ */
 main{ padding:20px 0 60px; }
 .section-head{ margin-bottom:30px; display:flex; align-items:baseline; gap:14px; }
-.section-head .numeral{ font-family:var(--display); font-style:italic; font-size:1.158rem; color:var(--accent); }
+.section-head .numeral{ font-family:var(--display); font-style:normal; font-size:1.158rem; color:var(--accent); }
 .section-head h2{ font-size:1.579rem; }
 .section-intro{ font-family:var(--display); font-style:italic; font-size:0.947rem; color:var(--ink-soft); margin:-14px 0 34px; }
 
 /* ============ ABOUT ============ */
 .about p{ color:var(--ink-soft); margin:0 0 18px; }
 .about .drop-name{
-  font-weight:700; font-variant:small-caps; color:var(--accent); font-size:1.3em;
+  font-weight:500; font-variant:normal; color:var(--accent); font-size:1.3em;
 }
 .marginalia{ margin-top:30px; padding-top:22px; border-top:1px solid var(--line); font-family:var(--display); font-style:italic; font-size:0.842rem; color:var(--ink-faint); }
 .marginalia div{ margin-bottom:7px; }
@@ -217,11 +247,11 @@ main{ padding:20px 0 60px; }
 /* ============ RESUME / EXPERIENCE ============ */
 .exp-item{ padding:24px 0; border-top:1px solid var(--line); }
 .exp-item:first-of-type{ border-top:none; padding-top:0; }
-.exp-top{ display:flex; justify-content:space-between; align-items:baseline; gap:16px; flex-wrap:wrap; }
-.exp-top h3{ font-family:var(--display); font-weight:600; font-style:italic; font-size:1.105rem; margin:0; }
-.exp-dates{ font-size:0.737rem; color:var(--ink-faint); font-family:var(--display); white-space:nowrap; }
+.exp-top{ display:flex; justify-content:space-between; align-items:baseline; gap:16px; }
+.exp-top h3{ font-family:var(--display); font-weight:500; font-style:italic; font-size:1.105rem; margin:0; flex:1 1 auto; min-width:0; }
+.exp-dates{ font-size:0.737rem; color:var(--ink-faint); font-family:var(--display); white-space:nowrap; flex:0 0 auto; }
 .exp-role{ font-size:0.737rem; color:var(--ink-faint); margin:4px 0 12px; letter-spacing:.02em; }
-.exp-item p{ margin:0 0 8px; color:var(--ink-soft); font-size:0.895rem; text-indent:-1em; margin-left:1em; }
+.exp-item p{ margin:0 0 8px; color:var(--ink-soft); font-size:0.82rem; text-indent:-1em; margin-left:1em; }
 .exp-item p::before{ content:"— "; color:var(--ink-faint); }
 .resume-cta{ margin-top:28px; display:inline-block; }
 
@@ -235,24 +265,21 @@ main{ padding:20px 0 60px; }
   color:var(--ink-faint);
 }
 .portfolio-split{
-  display:grid;
-  grid-template-columns:1fr auto 1fr;
+  display:flex;
+  flex-wrap:wrap;
+  justify-content:center;
   align-items:center;
-  margin-top:clamp(20px, 4vh, 44px);
+  gap:56px;
+  margin-top:clamp(14px, 3vh, 32px);
 }
 .split-link{
-  font-family:'Cormorant Garamond', 'Times New Roman', serif; font-style:normal; font-size:1.895rem;
+  font-family:var(--display); font-style:normal; font-size:1.895rem;
   text-decoration:none; color:var(--ink); text-align:center; line-height:1.3;
 }
 .split-link:hover{ color:var(--accent); }
-.split-link:first-of-type{ justify-self:end; padding-right:28px; }
-.split-link:last-of-type{ justify-self:start; padding-left:28px; }
-.split-numeral{ color:var(--accent); display:inline-block; width:1.1em; text-align:right; margin-right:6px; }
-.split-divider{ justify-self:center; width:1px; height:52px; background:var(--line); }
+.split-numeral{ color:var(--accent); margin-right:6px; }
 @media (max-width:699px){
-  .portfolio-split{ grid-template-columns:1fr; justify-items:center; gap:32px; }
-  .split-link:first-of-type, .split-link:last-of-type{ justify-self:center; padding:0; }
-  .split-divider{ width:3px; height:3px; border-radius:50%; background:var(--ink-faint); }
+  .portfolio-split{ gap:32px; }
 }
 
 /* ============ SUBSECTIONS (nested numbering, e.g. I.i / I.ii) ============ */
@@ -272,19 +299,19 @@ main{ padding:20px 0 60px; }
 }
 .subsection-head h3{
   font-family:var(--body); font-size:0.737rem; letter-spacing:.12em; text-transform:uppercase;
-  font-weight:600; color:var(--ink-soft); margin:0;
+  font-weight:500; color:var(--ink-soft); margin:0;
 }
 
 /* ============ PORTFOLIO / WRITING SAMPLES ============ */
 .sample-item{ padding:34px 0; border-top:1px solid var(--line); }
 .sample-item:first-of-type{ border-top:none; padding-top:0; }
 .sample-top{ display:flex; flex-direction:column; gap:4px; }
-.sample-top h3{ font-family:var(--display); font-weight:600; font-style:italic; font-size:1.158rem; margin:0; }
+.sample-top h3{ font-family:var(--display); font-weight:500; font-style:italic; font-size:1.158rem; margin:0; }
 .sample-meta{ font-size:0.737rem; color:var(--ink-faint); font-family:var(--display); }
-.sample-desc{ color:var(--ink-soft); font-size:0.842rem; margin:8px 0 18px; }
+.sample-desc{ color:var(--ink-soft); font-size:0.79rem; margin:8px 0 18px; }
 blockquote.excerpt{
   margin:12px 0 18px; padding-left:20px; border-left:2px solid var(--accent);
-  font-family:var(--display); font-style:italic; font-size:0.947rem; color:var(--ink-soft); line-height:1.6;
+  font-family:var(--display); font-style:italic; font-size:0.79rem; color:var(--ink-soft); line-height:1.6;
 }
 .sample-item a.read-link{ font-family:var(--body); font-size:0.737rem; text-decoration:none; border-bottom:1px solid var(--line); }
 .sample-item a.read-link:hover{ border-color:var(--accent); color:var(--accent); }
@@ -299,7 +326,7 @@ blockquote.excerpt{
 .contact-links a:hover{ border-color:var(--accent); color:var(--accent); }
 
 footer{ max-width:var(--max); margin:0 auto; padding:var(--footer-pt, 36px) 44px 56px; text-align:center; }
-footer .colophon{ font-family:var(--display); font-style:italic; font-size:0.737rem; color:var(--ink-faint); margin-top:var(--colophon-mt, 16px); }
+footer .colophon{ font-family:var(--display); font-style:italic; font-size:0.737rem; color:var(--ink-faint); }
 
 /* ============ PAGE TRANSITIONS ============ */
 @media not (prefers-reduced-motion: reduce){
@@ -342,9 +369,64 @@ footer .colophon{ font-family:var(--display); font-style:italic; font-size:0.737
 /* ============ RESPONSIVE ============ */
 @media (max-width:560px){
   .wrap, .masthead, footer{ padding-left:26px; padding-right:26px; }
-  .nav-links li + li::before{ margin:0 10px; }
   .exp-top{ flex-direction:column; gap:2px; }
   .hero{ padding:32px 0 16px; }
   body.title-page main{ padding-top:4px; }
-  .frontispiece-wrap{ --frontispiece-w: min(190px, 52%); margin-bottom:18px; }
+  .frontispiece-wrap{ --frontispiece-w: min(340px, 80vw, var(--frontispiece-cap)); --frontispiece-max-h: 46vh; margin-bottom:14px; }
+}
+
+/* ============ LIGHTBOX ============ */
+.lightbox{
+  position:fixed;
+  inset:0;
+  z-index:1000;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  gap:18px;
+  padding:32px;
+  background:rgba(20, 16, 12, .92);
+  opacity:0;
+  pointer-events:none;
+  transition:opacity .25s ease;
+}
+.lightbox.active{ opacity:1; pointer-events:auto; }
+.lightbox-img{
+  display:block;
+  max-width:90vw;
+  max-height:78vh;
+  width:auto;
+  height:auto;
+  border:1px solid var(--line);
+  padding:6px;
+  background:var(--paper);
+}
+.lightbox-caption{
+  font-family:var(--body);
+  font-style:normal;
+  font-size:0.842rem;
+  letter-spacing:.02em;
+  color:var(--paper);
+  text-align:center;
+  max-width:80vw;
+}
+.lightbox-caption em{ font-family:var(--display); font-style:italic; }
+.lightbox-close{
+  position:absolute;
+  top:20px;
+  right:24px;
+  font-family:var(--body);
+  font-size:1.6rem;
+  line-height:1;
+  color:var(--paper);
+  background:none;
+  border:none;
+  cursor:pointer;
+  padding:6px 10px;
+}
+.lightbox-close:hover{ color:var(--accent); }
+@media (max-width:560px){
+  .lightbox{ padding:20px; }
+  .lightbox-close{ top:12px; right:14px; }
 }

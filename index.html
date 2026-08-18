@@ -8,7 +8,7 @@
 <meta name="description" content="Technical writing portfolio.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Crimson+Pro:ital,wght@0,300;0,400;0,600;0,700;1,300;1,400;1,600;1,700&family=Cormorant+Garamond:ital,wght@0,400;0,600;1,500;1,600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Work+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400;1,500&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="styles.css">
 </head>
 <body class="title-page">
@@ -16,7 +16,6 @@
 <header>
   <div class="masthead">
     <a class="brand" href="index.html">Robert Phipps</a>
-    <hr class="rule">
     <ul class="nav-links">
       <li><a href="about.html">About</a></li>
       <li><a href="resume.html">Résumé</a></li>
@@ -27,13 +26,83 @@
 
 <section class="hero hero-title">
   <div class="wrap">
-    <div class="frontispiece-wrap">
-      <img class="frontispiece" src="images/brand-mark.jpg" alt="Robert Phipps">
-      <span class="frontispiece-caption">Renato Mambor, <em>Capovolto</em> (1963)</span>
+    <div class="frontispiece-wrap" id="frontispiece-wrap">
+      <img class="frontispiece" id="frontispiece-img" src="images/brand-mark.jpg" alt="Robert Phipps">
+      <p class="frontispiece-caption" id="frontispiece-caption"></p>
     </div>
-    <h1>Robert Phipps</h1>
   </div>
 </section>
+
+<div class="lightbox" id="lightbox" aria-hidden="true">
+  <button class="lightbox-close" id="lightbox-close" aria-label="Close">&times;</button>
+  <img class="lightbox-img" id="lightbox-img" src="" alt="">
+  <p class="lightbox-caption" id="lightbox-caption"></p>
+</div>
+
+<script>
+(function(){
+  var images = [
+    { src: "images/brand-mark.jpg", artist: "Renato Mambor", title: "Capovolto", year: "1963" },
+    { src: "images/mark2.jpg", artist: "Carl Strathmann", title: "Lunar Landscape with Owls", year: "1900" },
+    { src: "images/mark3.jpg", artist: "J. M. W. Turner", title: "A Paddle-steamer in a Storm", year: "1841" },
+    { src: "images/mark4.jpg", artist: "Jimmy Mitchell", title: "Paul Newman on the set of \"Butch Cassidy and the Sundance Kid\" Dir. George Roy Hill", year: "1969" },
+    { src: "images/mark5.jpg", artist: "Paul Gervais", title: "Histoire naturelle des mammifères", year: "c.1854–1855" },
+    //{ src: "images/mark6.jpg", artist: "Mark Rothko", title: "Untitled", year: "1961, Pen and ink and wash on woven paper" },
+    //{ src: "images/mark7.jpg", artist: "Jean-Michel Basquiat", title: "Untitled (Peso Neto)", year: "1981, Crayon on notebook paper" },
+    { src: "images/mark8.jpg", artist: "Francis Bacon", title: "Figure in a framework", year: "c.1957-61, Graphite and oil paint on paper" },
+    { src: "images/mark9.jpg", artist: "Fernand Nadal", title: "Untitled (Through the Porthole, Ocean and Sky)", year: "Late 19th Century" }, 
+    { src: "images/mark10.jpg", artist: "Shiko Munakata", title: "Bush Warbler", year: "1959, Woodcut" }, 
+    { src: "images/mark11.jpg", artist: "Robert Rauschenberg", title: "Untitled (Pegasus)", year: "1991, Woodcut" },
+    { src: "images/mark12.jpg", artist: "George Ault", title: "Moon and Clouds", year: "1945" },
+    { src: "images/mark13.jpg", artist: "June Wayne", title: "Tenth Memory", year: "1961" },
+    //{ src: "images/mark14.jpg", artist: "Jiri Jenicek", title: "Stairs", year: "1931" },
+    { src: "images/mark15.jpg", artist: "Elliott Erwitt", title: "From \"New York City\"", year: "1949" },
+    { src: "images/mark16.jpg", artist: "Marc Riboud", title: "Elephants bathing in the Gange", year: "1956" },
+    { src: "images/mark17.jpg", artist: "Roy DeCarava", title: "Dancers", year: "1956" },
+    //{ src: "images/mark18.jpg", artist: "Ernst Haas", title: "On the Set of \"Love and Death\" Dir. Woody Allen", year: "1975" },
+    { src: "images/mark19.jpg", artist: "Anton Pieck", title: "Moonlight Night", year: "1941" },
+    { src: "images/mark20.jpg", artist: "Henri Cartier-Bresson", title: "Italy, Sicily, Palermo, Town Hall", year: "1971" },
+    { src: "images/mark21.jpg", artist: "Fan Ho", title: "Trio 三重奏", year: "1956" },
+    // Add more entries here, e.g.:
+    // { src: "images/brand-mark-2.jpg", artist: "Artist Name", title: "Work Title", year: "2020" }
+  ];
+  var pick = images[Math.floor(Math.random() * images.length)];
+  var img = document.getElementById("frontispiece-img");
+  img.src = pick.src;
+  img.dataset.artist = pick.artist;
+  img.dataset.title = pick.title;
+  img.dataset.year = pick.year;
+
+  var wrap = document.getElementById("frontispiece-wrap");
+  var hoverCaption = document.getElementById("frontispiece-caption");
+  hoverCaption.innerHTML = img.dataset.artist + ", <em>" + img.dataset.title + "</em> (" + img.dataset.year + ")";
+  var lightbox = document.getElementById("lightbox");
+  var lightboxImg = document.getElementById("lightbox-img");
+  var lightboxCaption = document.getElementById("lightbox-caption");
+
+  function openLightbox(){
+    lightboxImg.src = img.src;
+    lightboxCaption.innerHTML = img.dataset.artist + ", <em>" + img.dataset.title + "</em> (" + img.dataset.year + ")";
+    lightbox.classList.add("active");
+    lightbox.setAttribute("aria-hidden", "false");
+    document.body.style.overflow = "hidden";
+  }
+  function closeLightbox(){
+    lightbox.classList.remove("active");
+    lightbox.setAttribute("aria-hidden", "true");
+    document.body.style.overflow = "";
+  }
+
+  wrap.addEventListener("click", openLightbox);
+  document.getElementById("lightbox-close").addEventListener("click", closeLightbox);
+  lightbox.addEventListener("click", function(e){
+    if(e.target === lightbox){ closeLightbox(); }
+  });
+  document.addEventListener("keydown", function(e){
+    if(e.key === "Escape"){ closeLightbox(); }
+  });
+})();
+</script>
 
 <main>
   <div class="wrap portfolio-center" id="portfolio">
@@ -43,7 +112,6 @@
       <a class="split-link" href="technical-writing.html">
         <span class="split-numeral">I.</span>Technical Writing
       </a>
-      <span class="split-divider"></span>
       <a class="split-link" href="https://robertphipps.substack.com/" target="_blank" rel="noopener noreferrer">
         <span class="split-numeral">II.</span>Essays &amp; Fiction
       </a>
@@ -52,7 +120,6 @@
 </main>
 
 <footer>
-  <div class="flourish"><hr class="rule"><span>§</span><hr class="rule"></div>
   <div class="colophon">© <span id="year"></span> Robert Phipps</div>
 </footer>
 
