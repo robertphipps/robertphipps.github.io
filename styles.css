@@ -129,7 +129,11 @@ main{ padding:44px 0 60px; flex:1 0 auto; }
 .section-head{ margin-bottom:30px; display:flex; align-items:baseline; gap:14px; }
 .section-head .numeral{ font-family:var(--display); font-style:normal; font-size:1.158rem; color:var(--accent); }
 .section-head h2{ font-size:1.579rem; }
-.section-intro{ font-family:var(--display); font-style:normal; font-size:0.947rem; color:var(--ink-soft); margin:-14px 0 34px; }
+.section-intro{ font-family:var(--body); font-style:italic; font-size:0.82rem; color:var(--ink-soft); margin:12px 0 34px; }
+
+/* ============ VERTICALLY CENTRED PAGES (about, contact) ============ */
+.center-page main{ display:flex; align-items:center; justify-content:center; }
+.center-page .wrap{ width:100%; }
 
 /* ============ ABOUT ============ */
 .about p{ color:var(--ink-soft); margin:0 0 18px; }
@@ -215,8 +219,9 @@ blockquote.excerpt{
 .sample-item a.read-link:hover{ border-color:var(--accent); color:var(--accent); }
 
 /* ============ CONTACT / COLOPHON ============ */
-.contact p{ color:var(--ink-soft); margin:0 0 24px; }
-.contact-links{ display:flex; flex-direction:column; gap:10px; }
+.contact p{ color:var(--ink-soft); margin:0; }
+/* Contact details: block centred on the page, email to the left, phone to the right. */
+.contact-links{ display:flex; justify-content:space-between; align-items:baseline; gap:24px; text-align:center; }
 .contact-links a{
   font-family:var(--display); font-style:italic; font-size:1rem; text-decoration:none;
   border-bottom:1px solid var(--line); width:fit-content;
@@ -272,4 +277,5 @@ footer .colophon{ font-family:var(--body); font-size:0.737rem; color:var(--ink-f
   .title-page .nav-links{ justify-content:center; gap:6px var(--nav-gap); }
   main{ padding-top:32px; }
   .exp-top{ flex-direction:column; gap:2px; }
+  .contact-links{ flex-direction:column; align-items:center; gap:6px; }
 }
