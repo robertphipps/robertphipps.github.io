@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Writing — Robert Phipps</title>
+<link rel="icon" type="image/jpg" href="/images/favicon.jpg">
+<link rel="preload" href="fonts/texgyreheros-regular.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="styles.css">
+</head>
+<body class="split-page">
+
+<header class="site-logo">
+  <a class="logo" href="index.html" aria-label="Robert Phipps, home"><img class="logo-anim" src="images/favicon.gif" alt="" width="48" height="48"><img class="logo-static" src="images/favicon.jpg" alt="" width="48" height="48"></a>
+</header>
+
+<main>
+  <div class="wrap writing-split">
+    <a class="split-item" href="technical-writing.html">
+      <img src="images/writing-technical.jpg" alt="" width="128" height="128">
+      <span class="split-label">technical writing</span>
+    </a>
+    <a class="split-item" href="https://robertphipps.substack.com/" target="_blank" rel="noopener noreferrer">
+      <img src="images/writing-essays.jpg" alt="" width="128" height="128">
+      <span class="split-label">essays &amp; fiction</span>
+    </a>
+  </div>
+</main>
+
+<footer>
+  <div class="colophon">© <span id="year"></span> Robert Phipps</div>
+</footer>
+
+<script>document.getElementById('year').textContent = new Date().getFullYear();</script>
+</body>
+</html>
