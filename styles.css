@@ -1,3 +1,19 @@
+@font-face{
+  font-family:'TeX Gyre Heros';
+  src:url('fonts/texgyreheros-regular.woff2') format('woff2');
+  font-weight:400; font-style:normal; font-display:swap;
+}
+@font-face{
+  font-family:'TeX Gyre Heros';
+  src:url('fonts/texgyreheros-italic.woff2') format('woff2');
+  font-weight:400; font-style:italic; font-display:swap;
+}
+@font-face{
+  font-family:'TeX Gyre Heros';
+  src:url('fonts/texgyreheros-bold.woff2') format('woff2');
+  font-weight:700; font-style:normal; font-display:swap;
+}
+
 :root{
   --paper:      #FFFFFF;
   --paper-alt:  #F7F5F0;
@@ -7,10 +23,15 @@
   --line:       #D9D9D9;
   --accent:     #874141;
 
-  --display: 'Work Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif;
-  --body:    'Work Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif;
+  --display: 'TeX Gyre Heros', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+  --body:    'TeX Gyre Heros', 'Helvetica Neue', Helvetica, Arial, sans-serif;
 
   --max: 660px;
+  --gutter: 44px;   /* left/right inset shared by navbar, content and footer */
+  --nav-max: calc(var(--max) - var(--gutter) * 2); /* same column as page content, so the logo lines up with the text below */
+  --nav-gap: 28px;  /* logo-to-link and link-to-link spacing */
+  --logo-size: 48px;
+  --nav-font: 18px; /* whole pixels keep glyphs crisp */
 }
 
 *{ box-sizing:border-box; }
@@ -33,6 +54,9 @@ html{
 }
 
 body{
+  min-height:100svh;
+  display:flex;
+  flex-direction:column;
   margin:0;
   background:var(--paper);
   color:var(--ink);
@@ -43,7 +67,7 @@ body{
 }
 
 a{ color:inherit; }
-.wrap{ max-width:var(--max); margin:0 auto; padding:0 44px; }
+.wrap{ max-width:var(--max); margin:0 auto; padding:0 var(--gutter); }
 
 h1,h2{ font-family:var(--display); font-weight:500; margin:0; }
 
@@ -55,71 +79,20 @@ h1,h2{ font-family:var(--display); font-weight:500; margin:0; }
   color:var(--ink-faint);
 }
 
-/* ============ MASTHEAD ============ */
-header{ padding:clamp(48px, 8vh, 244px) 0 0; }
-.masthead{ max-width:var(--max); margin:0 auto; padding:0 44px var(--masthead-pb, 28px); text-align:center; }
-.masthead .brand{
-  font-family:var(--display); font-size:1.8rem; font-weight:600; letter-spacing:.28em; text-transform:uppercase;
-  color:var(--ink); margin-bottom:var(--brand-mb, 16px); text-decoration:none; display:inline-block;
-  /* letter-spacing adds a trailing gap after the last character that gets
-     counted in the box's width for centering purposes, even though it has
-     no visible ink. That phantom gap was pushing the visible wordmark left
-     of true center (making everything else below it — like the frontispiece
-     photo — look off-center to the right by comparison). Pulling the box in
-     by one letter-spacing unit cancels the trailing gap so centering is
-     based on the actual glyphs. */
-  margin-right:-0.28em;
-}
-.masthead .brand:hover{ color:var(--accent); }
-.frontispiece-wrap{
-  display:inline-flex;
-  align-items:center;
-  justify-content:center;
-  position:relative;
-  margin:0 auto var(--frontispiece-mb, 30px);
-  border:1px solid var(--line);
-  padding:6px;
-  background:var(--paper);
-  cursor:pointer;
-}
-.frontispiece{
-  display:block;
-  max-width:var(--frontispiece-w, min(400px, 75vw));
-  max-height:var(--frontispiece-max-h, 50vh);
-  width:auto;
-  height:auto;
-}
-.frontispiece-caption{
-  position:absolute;
-  left:6px;
-  right:6px;
-  bottom:6px;
-  margin:0;
-  padding:8px 10px;
-  background:rgba(20, 16, 12, .72);
-  color:var(--paper);
-  font-family:var(--body);
-  font-size:0.684rem;
-  line-height:1.4;
-  letter-spacing:.01em;
-  text-align:center;
-  opacity:0;
-  transform:translateY(4px);
-  transition:opacity .2s ease, transform .2s ease;
-  pointer-events:none;
-}
-.frontispiece-caption em{ font-family:var(--display); font-style:italic; }
-.frontispiece-wrap:hover .frontispiece-caption{
-  opacity:1;
-  transform:translateY(0);
-}
-@media (hover:none){
-  .frontispiece-caption{ display:none; }
-}
-.nav-links{ display:flex; justify-content:center; gap:40px; list-style:none; margin:var(--nav-mt, 16px) 0 0; padding:0; flex-wrap:wrap; }
-.nav-links li{ display:flex; align-items:center; }
+/* ============ NAVBAR ============ */
+/* Left-aligned bar: small logo, then a row of lowercase text links. */
+header{ padding:55px var(--gutter) 0; }
+.navbar{ max-width:var(--nav-max); margin:0 auto; display:flex; align-items:center; gap:var(--nav-gap); flex-wrap:wrap; }
+.logo{ display:block; position:relative; line-height:0; flex:0 0 auto; }
+/* Animated GIF shows by default; the original static favicon sits on top,
+   hidden until hover / keyboard focus / click. Both are loaded up front so
+   the swap is instant. */
+.logo .logo-static{ position:absolute; inset:0; opacity:0; }
+.logo:hover .logo-static, .logo:focus-visible .logo-static, .logo:active .logo-static{ opacity:1; }
+.logo img{ display:block; width:var(--logo-size); height:var(--logo-size); object-fit:cover; }
+.nav-links{ display:flex; align-items:center; gap:var(--nav-gap); list-style:none; margin:0; padding:0; flex-wrap:wrap; }
 .nav-links a{
-  font-family:var(--body); font-size:0.75rem; letter-spacing:.1em; text-transform:uppercase;
+  font-family:var(--body); font-size:var(--nav-font); font-weight:400; text-transform:lowercase;
   text-decoration:none; color:var(--ink);
 }
 .nav-links a:hover, .nav-links a[aria-current="page"]{ color:var(--accent); }
@@ -131,98 +104,28 @@ header{ padding:clamp(48px, 8vh, 244px) 0 0; }
 }
 .breadcrumb:hover{ color:var(--accent); }
 
-/* ============ HERO / TITLE PAGE ============ */
-.hero{ padding:64px 0 56px; text-align:center; }
-body.title-page{
+/* ============ HOME PAGE ============ */
+/* The navbar exists only here: centered in the viewport, with the footer
+   pinned to the bottom so it doesn't pull the centering off. */
+body.title-page{ min-height:100svh; }
+.title-page header{
   min-height:100svh;
-  display:flex;
-  flex-direction:column;
-}
-body.title-page main{ padding-top:var(--main-pt, 14px); padding-bottom:var(--main-pb, 48px); }
-body.title-page footer{ padding-bottom:var(--footer-pb, 56px); }
-.hero-title{
-  flex:1 1 auto;
+  padding:0 var(--gutter);
   display:flex;
   align-items:center;
   justify-content:center;
-  min-height:0;
-  overflow:hidden;
-  padding:var(--hero-pad, 24px) 0;
 }
-/* Force the wrap to the same full width used everywhere else (masthead,
-   résumé, portfolio links), instead of letting it shrink-to-fit as a flex
-   item. This keeps the hero image centered via the exact same box math as
-   the rest of the page, rather than a separate flexbox calculation. */
-.hero-title > .wrap{ width:100%; }
-.hero .kicker{ font-family:var(--display); font-style:italic; font-weight:500; font-size:0.895rem; color:var(--ink-faint); margin-bottom:18px; }
-.hero h1{ font-family:var(--display); font-size:var(--h1-size, clamp(44px, 7.5vw, 72px)); line-height:1.12; margin-bottom:var(--h1-mb, 26px); font-weight:500; }
+.title-page .navbar{ justify-content:center; }
+.title-page footer{ position:absolute; left:0; right:0; bottom:0; }
 
-/* No-scroll mode only engages once the window is comfortably large in both
-   dimensions. Below this range the page falls back to full, uncompressed
-   spacing and normal scrolling — never a partial squeeze. */
-@media (min-width:700px) and (min-height:920px){
-  html:has(body.title-page){ height:100%; overflow:hidden; }
-  body.title-page{
-    height:100svh;
-    overflow:hidden;
-    --brand-mb: clamp(8px, 2vh, 16px);
-    --nav-mt: clamp(8px, 2vh, 16px);
-    --frontispiece-w: min(500px, 72vw);
-    --frontispiece-max-h: 34vh;
-    --frontispiece-mb: clamp(10px, 2vh, 22px);
-    --h1-size: clamp(28px, min(6.5vw, 6.5vh), 60px);
-    --h1-mb: clamp(8px, 1.8vh, 18px);
-    --hero-pad: clamp(6px, 1vh, 24px);
-    --main-pt: clamp(8px, 1.6vh, 28px);
-    --main-pb: clamp(20px, 5vh, 100px);
-    --footer-pb: clamp(20px, 7vh, 220px);
-  }
-}
+/* ============ LOGO-ONLY HEADER (every other page) ============ */
+header.site-logo{ display:flex; justify-content:center; }
 
-/* Much tighter tier for shorter laptop viewports (e.g. a 13" MacBook Pro,
-   ~730-900px of usable viewport height once browser chrome is subtracted).
-   Everything shrinks further here — smaller photo, smaller name, tighter
-   spacing throughout — to fit without scrolling on a genuinely small budget. */
-@media (min-width:700px) and (min-height:700px) and (max-height:919px){
-  html:has(body.title-page){ height:100%; overflow:hidden; }
-  body.title-page{
-    height:100svh;
-    overflow:hidden;
-    --frontispiece-w: min(460px, 70vw);
-    --frontispiece-max-h: 36vh;
-    --frontispiece-mb: clamp(6px, 1.5vh, 12px);
-    --h1-size: clamp(26px, min(6vw, 5.5vh), 42px);
-    --h1-mb: clamp(6px, 1.4vh, 12px);
-    --hero-pad: clamp(4px, 0.8vh, 14px);
-    --main-pt: clamp(6px, 1vh, 16px);
-    --main-pb: clamp(8px, 2vh, 40px);
-    --footer-pt: clamp(8px, 2vh, 28px);
-    --colophon-mt: clamp(4px, 1vh, 12px);
-    --footer-pb: clamp(10px, 3vh, 100px);
-  }
-}
-
-/* CSS can't detect physical monitor resolution directly, so this uses a wide
-   viewport as a proxy: a browser window this wide is realistically only
-   possible on a large/high-resolution display. If the browser isn't
-   maximized, this won't trigger even on a high-res screen — there's no way
-   around that limitation with CSS alone. The vh cap is kept so this can
-   never reopen the no-scroll overlap issue if it happens to coincide with
-   the compact layout above. */
-@media (min-width:2000px){
-  /* Capped at (var(--max) - 88px) — the .wrap's max-width minus its 44px
-     left/right padding — so the image can never render wider than the box
-     it's centered inside. Going wider than that caused the frontispiece to
-     overflow .wrap, which broke centering (confirmed via getBoundingClientRect:
-     the wrap stayed correctly centered, but the overflowing frontispiece-wrap
-     did not). */
-  body.title-page{ --frontispiece-w: min(600px, 65vw, calc(var(--max) - 88px)); --frontispiece-max-h: 36vh; }
-}
 .btn{ font-family:var(--body); font-size:0.789rem; text-decoration:none; padding:10px 4px; border-bottom:1px solid var(--ink); }
 .btn:hover{ border-color:var(--accent); color:var(--accent); }
 
 /* ============ SECTION SCAFFOLD ============ */
-main{ padding:20px 0 60px; }
+main{ padding:44px 0 60px; flex:1 0 auto; }
 .section-head{ margin-bottom:30px; display:flex; align-items:baseline; gap:14px; }
 .section-head .numeral{ font-family:var(--display); font-style:normal; font-size:1.158rem; color:var(--accent); }
 .section-head h2{ font-size:1.579rem; }
@@ -249,31 +152,32 @@ main{ padding:20px 0 60px; }
 .exp-item p::before{ content:"— "; color:var(--ink-faint); }
 .resume-cta{ margin-top:28px; display:inline-block; }
 
-/* ============ PORTFOLIO LANDING (two-link split) ============ */
-.portfolio-center{ text-align:center; max-width:820px; }
-.portfolio-eyebrow{
-  font-family:var(--body);
-  font-size:0.684rem;
-  letter-spacing:.14em;
-  text-transform:uppercase;
-  color:var(--ink-faint);
-}
-.portfolio-split{
+/* ============ WRITING (two-image split) ============ */
+.writing-split{
   display:flex;
-  flex-wrap:wrap;
   justify-content:center;
+  align-items:flex-start;
+  gap:clamp(32px, 8vw, 96px);
+}
+/* Centre the split in the viewport (not just the space under the logo). The
+   overlay ignores clicks so the logo and footer stay usable. */
+.split-page main{ position:absolute; inset:0; display:flex; align-items:center; justify-content:center; padding:0; pointer-events:none; }
+.split-page .split-item{ pointer-events:auto; }
+.split-item{
+  display:flex;
+  flex-direction:column;
   align-items:center;
-  gap:56px;
-  margin-top:clamp(14px, 3vh, 32px);
+  gap:14px;
+  text-decoration:none;
+  color:var(--ink);
 }
-.split-link{
-  font-family:var(--display); font-style:normal; font-size:1.895rem;
-  text-decoration:none; color:var(--ink); text-align:center; line-height:1.3;
-}
-.split-link:hover{ color:var(--accent); }
-.split-numeral{ color:var(--accent); margin-right:6px; }
-@media (max-width:699px){
-  .portfolio-split{ gap:32px; }
+.split-item img{ display:block; width:128px; height:128px; transition:opacity .2s ease; }
+.split-label{ font-family:var(--body); font-size:var(--nav-font); text-transform:lowercase; text-align:center; }
+.split-item:hover .split-label, .split-item:focus-visible .split-label{ color:var(--accent); }
+.split-item:hover img, .split-item:focus-visible img{ opacity:.8; }
+@media (max-width:560px){
+  .writing-split{ gap:28px; }
+  .split-item img{ width:112px; height:112px; }
 }
 
 /* ============ SUBSECTIONS (nested numbering, e.g. I.i / I.ii) ============ */
@@ -319,8 +223,8 @@ blockquote.excerpt{
 }
 .contact-links a:hover{ border-color:var(--accent); color:var(--accent); }
 
-footer{ max-width:var(--max); margin:0 auto; padding:var(--footer-pt, 36px) 44px 56px; text-align:center; }
-footer .colophon{ font-family:var(--display); font-style:italic; font-size:0.737rem; color:var(--ink-faint); }
+footer{ width:100%; max-width:calc(var(--nav-max) + var(--gutter) * 2); margin:auto auto 0; padding:24px var(--gutter) 28px; text-align:center; }
+footer .colophon{ font-family:var(--body); font-size:0.737rem; color:var(--ink-faint); }
 
 /* ============ PAGE TRANSITIONS ============ */
 @media not (prefers-reduced-motion: reduce){
@@ -362,65 +266,10 @@ footer .colophon{ font-family:var(--display); font-style:italic; font-size:0.737
 
 /* ============ RESPONSIVE ============ */
 @media (max-width:560px){
-  .wrap, .masthead, footer{ padding-left:26px; padding-right:26px; }
+  :root{ --gutter:26px; --nav-gap:20px; --logo-size:36px; --nav-font:17px; }
+  header{ padding-top:28px; }
+  .title-page .navbar{ flex-direction:column; align-items:center; gap:18px; }
+  .title-page .nav-links{ justify-content:center; gap:6px var(--nav-gap); }
+  main{ padding-top:32px; }
   .exp-top{ flex-direction:column; gap:2px; }
-  .hero{ padding:32px 0 16px; }
-  body.title-page main{ padding-top:4px; }
-  .frontispiece-wrap{ --frontispiece-w: min(310px, 78vw); --frontispiece-max-h: 44vh; margin-bottom:14px; }
-}
-
-/* ============ LIGHTBOX ============ */
-.lightbox{
-  position:fixed;
-  inset:0;
-  z-index:1000;
-  display:flex;
-  flex-direction:column;
-  align-items:center;
-  justify-content:center;
-  gap:18px;
-  padding:32px;
-  background:rgba(20, 16, 12, .92);
-  opacity:0;
-  pointer-events:none;
-  transition:opacity .25s ease;
-}
-.lightbox.active{ opacity:1; pointer-events:auto; }
-.lightbox-img{
-  display:block;
-  max-width:90vw;
-  max-height:78vh;
-  width:auto;
-  height:auto;
-  border:1px solid var(--line);
-  padding:6px;
-  background:var(--paper);
-}
-.lightbox-caption{
-  font-family:var(--body);
-  font-style:normal;
-  font-size:0.842rem;
-  letter-spacing:.02em;
-  color:var(--paper);
-  text-align:center;
-  max-width:80vw;
-}
-.lightbox-caption em{ font-family:var(--display); font-style:italic; }
-.lightbox-close{
-  position:absolute;
-  top:20px;
-  right:24px;
-  font-family:var(--body);
-  font-size:1.6rem;
-  line-height:1;
-  color:var(--paper);
-  background:none;
-  border:none;
-  cursor:pointer;
-  padding:6px 10px;
-}
-.lightbox-close:hover{ color:var(--accent); }
-@media (max-width:560px){
-  .lightbox{ padding:20px; }
-  .lightbox-close{ top:12px; right:14px; }
 }
