@@ -103,6 +103,11 @@ header{ padding:55px var(--gutter) 0; }
   color:var(--ink-faint); text-decoration:none; display:inline-block; margin-bottom:6px;
 }
 .breadcrumb:hover{ color:var(--accent); }
+.breadcrumb + .exp-item{ margin-top:22px; }
+/* Breadcrumb for vertically centred pages: sits where main's top padding ends (same spot as on
+   top-aligned pages) but takes up no height, so it doesn't shift the centred content. */
+.crumb-row{ position:relative; z-index:1; height:0; padding-top:44px; }
+@media (max-width:560px){ .crumb-row{ padding-top:32px; } }
 
 /* ============ HOME PAGE ============ */
 /* The navbar exists only here: centered in the viewport, with the footer
@@ -119,7 +124,17 @@ body.title-page{ min-height:100svh; }
 .title-page footer{ position:absolute; left:0; right:0; bottom:0; }
 
 /* ============ LOGO-ONLY HEADER (every other page) ============ */
-header.site-logo{ display:flex; justify-content:center; }
+header.site-logo{ display:flex; justify-content:center; position:relative; }
+/* Pages reached from a split page: the home logo and the section marker sit side by
+   side, left-aligned with the text column (same left edge as the body text and the
+   "<- Writing" breadcrumb). The max() keeps them on the page gutter on narrow screens. */
+header.has-mark{
+  justify-content:flex-start; gap:14px;
+  padding-left:max(var(--gutter), calc((100% - var(--nav-max)) / 2));
+  padding-right:max(var(--gutter), calc((100% - var(--nav-max)) / 2));
+}
+/* The marker is a plain image (not a link) - it only indicates the current page. */
+.page-mark{ display:block; flex:0 0 auto; width:var(--logo-size); height:var(--logo-size); object-fit:cover; }
 
 .btn{ font-family:var(--body); font-size:0.789rem; text-decoration:none; padding:10px 4px; border-bottom:1px solid var(--ink); }
 .btn:hover{ border-color:var(--accent); color:var(--accent); }
@@ -273,6 +288,7 @@ footer .colophon{ font-family:var(--body); font-size:0.737rem; color:var(--ink-f
 @media (max-width:560px){
   :root{ --gutter:26px; --nav-gap:20px; --logo-size:36px; --nav-font:17px; }
   header{ padding-top:28px; }
+  header.has-mark{ gap:10px; }
   .title-page .navbar{ flex-direction:column; align-items:center; gap:18px; }
   .title-page .nav-links{ justify-content:center; gap:6px var(--nav-gap); }
   main{ padding-top:32px; }
