@@ -246,6 +246,42 @@ blockquote.excerpt{
 footer{ width:100%; max-width:calc(var(--nav-max) + var(--gutter) * 2); margin:auto auto 0; padding:24px var(--gutter) 28px; text-align:center; }
 footer .colophon{ font-family:var(--body); font-size:0.737rem; color:var(--ink-faint); }
 
+/* ============ GALLERY (random image + lightbox) ============ */
+/* Extra bottom padding equals header + top padding, so the image sits in the middle of the
+   viewport (the page has no footer). */
+.gallery-page main{ padding-bottom:147px; }
+.frontispiece-wrap{
+  display:inline-flex; align-items:center; justify-content:center; position:relative;
+  border:1px solid var(--line); padding:6px; background:var(--paper);
+  font:inherit; color:inherit; cursor:pointer;
+}
+.frontispiece-wrap:focus-visible{ outline:2px solid var(--accent); outline-offset:3px; }
+.frontispiece{ display:block; max-width:min(400px, 75vw); max-height:50vh; width:auto; height:auto; }
+/* Caption fades in over the bottom of the image on hover */
+.frontispiece-caption{
+  display:block; position:absolute; left:6px; right:6px; bottom:6px; margin:0; padding:8px 10px;
+  background:rgba(20, 16, 12, .72); color:var(--paper);
+  font-family:var(--body); font-size:0.684rem; line-height:1.4; letter-spacing:.01em; text-align:center;
+  opacity:0; transform:translateY(4px); transition:opacity .2s ease, transform .2s ease; pointer-events:none;
+}
+.frontispiece-caption em, .lightbox-caption em{ font-family:var(--display); font-style:italic; }
+.frontispiece-wrap:hover .frontispiece-caption, .frontispiece-wrap:focus-visible .frontispiece-caption{ opacity:1; transform:translateY(0); }
+@media (hover:none){ .frontispiece-caption{ display:none; } }
+
+.lightbox{
+  position:fixed; inset:0; z-index:1000;
+  display:flex; flex-direction:column; align-items:center; justify-content:center; gap:18px; padding:32px;
+  background:rgba(20, 16, 12, .92); opacity:0; pointer-events:none; transition:opacity .25s ease;
+}
+.lightbox.active{ opacity:1; pointer-events:auto; }
+.lightbox-img{ display:block; max-width:90vw; max-height:78vh; width:auto; height:auto; border:1px solid var(--line); padding:6px; background:var(--paper); }
+.lightbox-caption{ font-family:var(--body); font-size:0.842rem; letter-spacing:.02em; color:var(--paper); text-align:center; max-width:80vw; margin:0; }
+.lightbox-close{
+  position:absolute; top:20px; right:24px; font-family:var(--body); font-size:1.6rem; line-height:1;
+  color:var(--paper); background:none; border:none; cursor:pointer; padding:6px 10px;
+}
+.lightbox-close:hover, .lightbox-close:focus-visible{ color:var(--accent); }
+
 /* ============ PAGE TRANSITIONS ============ */
 @media not (prefers-reduced-motion: reduce){
   @view-transition{ navigation: auto; }
@@ -269,19 +305,6 @@ footer .colophon{ font-family:var(--body); font-size:0.737rem; color:var(--ink-f
      look doubled/thicker for a moment. */
   ::view-transition-old(masthead){ display: none; }
   ::view-transition-new(masthead){ animation: none; mix-blend-mode: normal; }
-
-  /* JS fallback (browsers without native cross-document view-transitions) */
-  html.vt-fallback header{ opacity:1; transform:none; }
-  html.vt-fallback main,
-  html.vt-fallback footer{ opacity:0; }
-  html.vt-fallback.fade-in main,
-  html.vt-fallback.fade-in footer{ opacity:1; transform:translateY(0); transition:opacity .3s ease, transform .34s ease; }
-  html.vt-fallback.fade-out main,
-  html.vt-fallback.fade-out footer{ opacity:0; transform:translateY(-10px); transition:opacity .26s ease, transform .28s ease; }
-}
-
-@media (prefers-reduced-motion: reduce){
-  html.vt-fallback{ opacity:1; }
 }
 
 /* ============ RESPONSIVE ============ */
@@ -289,6 +312,10 @@ footer .colophon{ font-family:var(--body); font-size:0.737rem; color:var(--ink-f
   :root{ --gutter:26px; --nav-gap:20px; --logo-size:36px; --nav-font:17px; }
   header{ padding-top:28px; }
   header.has-mark{ gap:10px; }
+  .gallery-page main{ padding-bottom:96px; }
+  .frontispiece{ max-width:min(310px, 78vw); max-height:44vh; }
+  .lightbox{ padding:20px; }
+  .lightbox-close{ top:12px; right:14px; }
   .title-page .navbar{ flex-direction:column; align-items:center; gap:18px; }
   .title-page .nav-links{ justify-content:center; gap:6px var(--nav-gap); }
   main{ padding-top:32px; }
