@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Essays & Fiction — Robert Phipps</title>
+<link rel="icon" type="image/jpg" href="/images/favicon.jpg">
+<link rel="preload" href="fonts/texgyreheros-regular.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="styles.css">
+</head>
+<body class="stack-page">
+
+<header class="site-logo has-mark">
+  <a class="logo" href="index.html" aria-label="Robert Phipps, home"><img class="logo-anim" src="images/favicon.gif" alt="" width="48" height="48"><img class="logo-static" src="images/favicon.jpg" alt="" width="48" height="48"></a>
+  <img class="page-mark" src="images/writing-essays.jpg" alt="Essays &amp; fiction" width="48" height="48">
+</header>
+
+<div class="wrap crumb-row">
+  <a class="breadcrumb" href="writing.html">← Writing</a>
+</div>
+
+<main>
+  <div class="wrap writing-split split-stack">
+    <a class="split-item" href="https://robertphipps.substack.com/" target="_blank" rel="noopener noreferrer" aria-label="Substack" data-mark="images/essays-substack.jpg" data-mark-alt="Substack">
+      <span class="stack-caption" aria-hidden="true"><span>l</span><span>e</span><span>a</span><span>v</span><span>e</span></span>
+      <img src="images/essays-substack.jpg" alt="" width="360" height="360">
+    </a>
+    <a class="split-item" href="essays-portfolio.html" aria-label="Portfolio" data-mark="images/essays-portfolio.jpg" data-mark-alt="Portfolio">
+      <img src="images/essays-portfolio.jpg" alt="" width="360" height="360">
+      <span class="stack-caption" aria-hidden="true"><span>s</span><span>t</span><span>a</span><span>y</span></span>
+    </a>
+  </div>
+</main>
+
+<footer>
+  <div class="colophon">© <span id="year"></span> Robert Phipps</div>
+</footer>
+
+<script>document.getElementById('year').textContent = new Date().getFullYear();</script>
+<script>
+/* Clicking "leave" or "stay" swaps the header icon to that link's image (dancers / hand in water). */
+(function () {
+  var mark = document.querySelector('.page-mark');
+  var original = { src: mark.getAttribute('src'), alt: mark.alt };
+  document.querySelectorAll('[data-mark]').forEach(function (link) {
+    new Image().src = link.dataset.mark;            /* preload so the swap is instant */
+    link.addEventListener('click', function () {
+      mark.src = link.dataset.mark;
+      mark.alt = link.dataset.markAlt;
+    });
+  });
+  /* coming back with the browser's back button: restore the default icon */
+  window.addEventListener('pageshow', function (e) {
+    if (e.persisted) { mark.src = original.src; mark.alt = original.alt; }
+  });
+})();
+</script>
+</body>
+</html>

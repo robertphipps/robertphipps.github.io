@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Portfolio — Robert Phipps</title>
+<link rel="icon" type="image/jpg" href="/images/favicon.jpg">
+<link rel="preload" href="fonts/texgyreheros-regular.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<header class="site-logo has-mark">
+  <a class="logo" href="index.html" aria-label="Robert Phipps, home"><img class="logo-anim" src="images/favicon.gif" alt="" width="48" height="48"><img class="logo-static" src="images/favicon.jpg" alt="" width="48" height="48"></a>
+  <img class="page-mark" src="images/essays-portfolio.jpg" alt="Portfolio" width="48" height="48">
+</header>
+
+<main>
+  <div class="wrap">
+    <a class="breadcrumb" href="writing.html">← Writing</a>
+    <!-- To add a piece: copy a pieces/piece-N.html file, add a matching thumbnail in
+         images/essays/, then copy one <li> below and point it at the new page. -->
+    <ul class="thumb-grid">
+      <li>
+        <a class="thumb" href="pieces/there.html">
+          <img src="images/essays/there.jpg" alt="" loading="lazy">
+          <span class="thumb-label">The There</span>
+        </a>
+      </li>
+      <li>
+        <a class="thumb" href="pieces/rusticators.html">
+          <img src="images/essays/rusticators.jpg" alt="" loading="lazy">
+          <span class="thumb-label">The Rusticators</span>
+        </a>
+      </li>
+    </ul>
+  </div>
+</main>
+
+<footer>
+  <div class="colophon">© <span id="year"></span> Robert Phipps</div>
+</footer>
+
+<script>document.getElementById('year').textContent = new Date().getFullYear();</script>
+</body>
+</html>
