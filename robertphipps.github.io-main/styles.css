@@ -106,7 +106,7 @@ header{ padding:55px var(--gutter) 0; }
 .breadcrumb + .exp-item{ margin-top:22px; }
 /* Breadcrumb for vertically centred pages: sits where main's top padding ends (same spot as on
    top-aligned pages) but takes up no height, so it doesn't shift the centred content. */
-.crumb-row{ position:relative; z-index:1; height:0; padding-top:44px; }
+.crumb-row{ position:relative; z-index:1; width:100%; height:0; padding-top:44px; }
 @media (max-width:560px){ .crumb-row{ padding-top:32px; } }
 
 /* ============ HOME PAGE ============ */
@@ -135,6 +135,15 @@ header.has-mark{
 }
 /* The marker is a plain image (not a link) - it only indicates the current page. */
 .page-mark{ display:block; flex:0 0 auto; width:var(--logo-size); height:var(--logo-size); object-fit:cover; }
+/* Optional link-button on the right of the header (same row and size as the logo and marker),
+   lined up with the right edge of the text column. Used on the Essays & Fiction page for Substack. */
+.header-link{ display:block; margin-left:auto; flex:0 0 auto; line-height:0; }
+.header-link img{ display:block; width:var(--logo-size); height:var(--logo-size); object-fit:cover; transition:opacity .2s ease; }
+.header-link:hover img, .header-link:focus-visible img{ opacity:.7; }
+/* While the slide-to-marker animation runs (see essays-fiction.html), the image travels above the
+   marker and stays fully opaque. */
+.header-link{ position:relative; z-index:2; }
+.header-link.is-moving img{ opacity:1; }
 
 .btn{ font-family:var(--body); font-size:0.789rem; text-decoration:none; padding:10px 4px; border-bottom:1px solid var(--ink); }
 .btn:hover{ border-color:var(--accent); color:var(--accent); }
@@ -199,6 +208,16 @@ main{ padding:44px 0 60px; flex:1 0 auto; }
   .split-item img{ width:112px; height:112px; }
 }
 
+/* Writing and about pages: the two split images shown large (200px). Scales down on
+   narrow or short screens so the pair never overflows or runs into the logo at the top. */
+.split-big{
+  --split-gap:clamp(32px, 8vw, 96px);
+  --split-size:min(200px, calc((100vw - var(--gutter) * 2 - var(--split-gap)) / 2), calc(100svh - 300px));
+  gap:var(--split-gap);
+}
+.split-big .split-item img{ width:var(--split-size); height:var(--split-size); }
+@media (max-width:560px){ .split-big{ --split-gap:28px; } }
+
 /* ============ SUBSECTIONS (nested numbering, e.g. I.i / I.ii) ============ */
 .subsection-head{
   display:flex;
@@ -244,7 +263,65 @@ blockquote.excerpt{
 .contact-links a:hover{ border-color:var(--accent); color:var(--accent); }
 
 footer{ width:100%; max-width:calc(var(--nav-max) + var(--gutter) * 2); margin:auto auto 0; padding:24px var(--gutter) 28px; text-align:center; }
-footer .colophon{ font-family:var(--body); font-size:0.737rem; color:var(--ink-faint); }
+footer .colophon{ text-transform:lowercase; font-family:var(--body); font-size:0.737rem; color:var(--ink-faint); }
+
+/* ============ ESSAYS & FICTION ============ */
+/* Images are up to 360px, centred in the text area: horizontally, and vertically in the space
+   between the breadcrumb and the copyright. --stack-pad is the visible breathing room kept above and
+   below the pair (breadcrumb to image, image to copyright), so the images never crowd the breadcrumb. The size scales down with the screen
+   height (and width) until it reaches --stack-min; below that the page simply scrolls.
+   --chrome-top / --chrome-bottom are the heights of the logo+breadcrumb and copyright bands.
+   Body class must be "stack-page". */
+.stack-page{ --chrome-top:147px; --chrome-bottom:74px; --stack-pad:72px; --stack-gap:28px; --stack-min:160px; --stack-inset:32px; --caption-h:34px; }
+.stack-page main{
+  box-sizing:border-box; display:flex; align-items:center; justify-content:center;
+  padding:calc(var(--stack-pad) + 24px) 0 calc(var(--stack-pad) - 24px);   /* the breadcrumb hangs ~24px below its row, the copyright has ~24px of padding above it */
+  min-height:calc(100svh - var(--chrome-top) - var(--chrome-bottom));
+}
+.split-stack{
+  --stack-size:max(var(--stack-min), min(360px,
+      calc(100vw - (var(--gutter) + var(--stack-inset)) * 2),
+      calc((100svh - var(--chrome-top) - var(--chrome-bottom) - var(--stack-pad) * 2 - var(--stack-gap) - var(--caption-h) * 2) / 2)));
+  flex-direction:column; align-items:center; gap:var(--stack-gap);
+  width:100%;
+}
+.split-stack .split-item{ flex-direction:column; align-items:center; gap:10px; }
+/* "leave" above the first image, "stay" below the second. The letters are spread so the word spans
+   exactly the width of the image (each letter is its own span; space-between does the spacing).
+   Keep --caption-h in step with this block's height (one line of text + the 10px gap). */
+.split-stack .stack-caption{
+  display:flex; justify-content:space-between; width:var(--stack-size); box-sizing:border-box; padding:0 10px;   /* small inset so the first/last letters don't sit flush with the image edges */
+  font-family:var(--body); font-size:14px; line-height:1.7; text-transform:lowercase; color:var(--ink-soft);
+}
+.split-stack .split-item:hover .stack-caption, .split-stack .split-item:focus-visible .stack-caption{ color:var(--accent); }
+.split-stack .split-item img{ width:var(--stack-size); height:var(--stack-size); object-fit:cover; }
+.split-stack .split-left{ align-self:flex-start; }
+.split-stack .split-right{ align-self:flex-end; flex-direction:row-reverse; }
+.split-stack .split-label{ font-size:14px; color:var(--ink-soft); }
+
+/* Portfolio: thumbnails in a two-column grid, pairs cascading down the page. */
+.thumb-grid{
+  --thumb-ratio:1 / 1;              /* every thumbnail is cropped to this shape; use e.g. 4 / 5 for portrait */
+  list-style:none; margin:0; padding:0;
+  display:grid; grid-template-columns:repeat(2, minmax(0, 1fr));
+  gap:44px 28px;
+}
+.breadcrumb + .thumb-grid{ margin-top:22px; }
+.thumb{ display:block; text-decoration:none; color:var(--ink); }
+.thumb img{ display:block; width:100%; aspect-ratio:var(--thumb-ratio); object-fit:cover; background:#e0e0de; transition:opacity .2s ease; }
+.thumb-label{ display:block; margin-top:12px; font-family:var(--body); font-size:16px; text-transform:lowercase; }
+.thumb:hover .thumb-label, .thumb:focus-visible .thumb-label{ color:var(--accent); }
+.thumb:hover img, .thumb:focus-visible img{ opacity:.8; }
+
+/* Individual piece page */
+.piece-title{ font-size:1.579rem; margin:6px 0 0; }
+.piece-meta{ font-family:var(--body); font-style:italic; font-size:0.82rem; color:var(--ink-faint); margin:6px 0 34px; }
+.piece p{ color:var(--ink-soft); margin:0 0 18px; }
+.piece .piece-meta{ color:var(--ink-faint); margin:6px 0 34px; }
+.piece-header{ display:block; width:100%; max-width:480px; height:auto; margin:0 auto 40px; }   /* centred image under the title and date */
+.back-to-top{ display:block; width:max-content; margin:44px auto 0; padding:8px; color:var(--ink-faint); line-height:0; transition:color .2s ease; }
+.back-to-top:hover, .back-to-top:focus-visible{ color:var(--accent); }
+.piece hr{ border:0; border-top:1px solid var(--line); margin:36px 0; }   /* section break (--- in the source) */
 
 /* ============ GALLERY (random image + lightbox) ============ */
 /* Extra bottom padding equals header + top padding, so the image sits in the middle of the
@@ -312,6 +389,9 @@ footer .colophon{ font-family:var(--body); font-size:0.737rem; color:var(--ink-f
   :root{ --gutter:26px; --nav-gap:20px; --logo-size:36px; --nav-font:17px; }
   header{ padding-top:28px; }
   header.has-mark{ gap:10px; }
+  .stack-page{ --chrome-top:96px; --chrome-bottom:70px; --stack-pad:56px; --stack-gap:24px; }
+  .thumb-grid{ gap:32px 16px; }
+  .thumb-label{ font-size:15px; }
   .gallery-page main{ padding-bottom:96px; }
   .frontispiece{ max-width:min(310px, 78vw); max-height:44vh; }
   .lightbox{ padding:20px; }
