@@ -138,6 +138,9 @@ header.has-mark{
 /* Variant of the marker that plays a sound when clicked (technical writing, essays & fiction).
    Deliberately has no hover/active dimming, so the highlight effect stays exclusive to page links. */
 .page-mark-btn{ display:block; flex:0 0 auto; margin:0; padding:0; border:0; background:none; font:inherit; line-height:0; cursor:pointer; -webkit-tap-highlight-color:transparent; }
+/* Gallery pages: the split-page glyph (see gallery.html) stands in for the page thumbnail, in the same
+   48px slot beside the logo. Like .page-mark it only indicates the current page - it is not a link. */
+.page-glyph{ display:flex; align-items:center; justify-content:center; flex:0 0 auto; width:var(--logo-size); height:var(--logo-size); font-family:var(--body); font-size:calc(var(--logo-size) * .85); line-height:1; color:var(--ink); user-select:none; }
 /* Optional link-button on the right of the header (same row and size as the logo and marker),
    lined up with the right edge of the text column. Used on the Essays & Fiction page for Substack. */
 .header-link{ display:block; margin-left:auto; flex:0 0 auto; line-height:0; }
@@ -210,6 +213,10 @@ main{ padding:44px 0 60px; flex:1 0 auto; }
   .writing-split{ gap:28px; }
   .split-item img{ width:112px; height:112px; }
 }
+
+/* Gallery split page: two glyphs stand in for the images. */
+.split-glyph{ font-family:var(--body); font-size:clamp(56px, 14vw, 104px); line-height:1; color:var(--ink); transition:color .2s ease; }
+.split-item:hover .split-glyph, .split-item:focus-visible .split-glyph{ color:var(--accent); }
 
 /* Writing and about pages: the two split images shown large (200px). Scales down on
    narrow or short screens so the pair never overflows or runs into the logo at the top. */
@@ -329,14 +336,62 @@ footer .colophon{ text-transform:lowercase; font-family:var(--body); font-size:0
 /* ============ GALLERY (random image + lightbox) ============ */
 /* Extra bottom padding equals header + top padding, so the image sits in the middle of the
    viewport (the page has no footer). */
-.gallery-page main{ padding-bottom:147px; }
+/* Top padding keeps the image roughly centred in the viewport until text is typed above it (the
+   text then pushes the image down); the minimum leaves room for the breadcrumb. */
+.gallery-page main{ display:block; padding:max(52px, calc(25vh - 179px)) 0 60px; }
+/* The image sits in a fixed-height slot, so the refresh button below it stays put whatever
+   the shape of the image (border 1px + padding 6px on each side = 14px). */
+.gallery-stage{ width:100%; display:flex; flex-direction:column; align-items:center; gap:14px; }
+.frontispiece-slot{ display:flex; align-items:center; justify-content:center; height:calc(50vh + 14px); }
+.gallery-refresh{
+  margin:0; padding:4px 12px; border:0; background:none; cursor:pointer;
+  font-family:var(--body); font-size:1.5rem; line-height:1; color:var(--ink-faint);
+  transition:color .2s ease; -webkit-tap-highlight-color:transparent;
+}
+.gallery-refresh:hover, .gallery-refresh:focus-visible{ color:var(--accent); }
+
+/* "What is this?" helper: an image at the top right of the header. Clicking it slides a label out
+   to its left (the clip box hides the label until it has left the image); clicking the label types
+   out the gallery's description (gallery-help.js). Like the sound markers, the image doesn't dim on
+   hover - that effect is kept for page links. */
+.gallery-help{ position:relative; margin-left:auto; flex:0 0 auto; line-height:0; }
+.help-mark{ position:relative; z-index:2; display:block; margin:0; padding:0; border:0; background:none; cursor:pointer; -webkit-tap-highlight-color:transparent; }
+.help-mark img{ display:block; width:var(--logo-size); height:var(--logo-size); object-fit:cover; }
+.help-clip{ position:absolute; z-index:1; right:100%; top:50%; transform:translateY(-50%); overflow:hidden; }
+.help-bubble{
+  display:block; margin:0 12px 0 0; padding:0; border:0; background:none;
+  font-family:var(--body); font-size:16px; line-height:1.7; text-transform:lowercase; white-space:nowrap; color:var(--ink);
+  cursor:pointer; -webkit-tap-highlight-color:transparent;
+  transform:translateX(calc(100% + 12px)); visibility:hidden;
+  transition:transform .75s cubic-bezier(.25,.6,.3,1), visibility 0s linear .75s;
+}
+.help-bubble.open{ transform:translateX(0); visibility:visible; transition:transform .75s cubic-bezier(.25,.6,.3,1), visibility 0s; }
+.help-bubble:hover, .help-bubble:focus-visible{ color:var(--accent); }
+
+/* Typed-out description above the image */
+.gallery-intro{ color:var(--ink-soft); }
+.gallery-intro:not(:empty){ margin-bottom:28px; }
+.gallery-intro p{ margin:0 0 14px; }
+.gallery-intro p:last-child{ margin-bottom:0; }
+/* "ok got it" line shown once the text has been typed */
+.gallery-intro .gallery-intro-close{ margin:20px 0 0; opacity:0; transition:opacity .6s ease; }
+.gallery-intro .gallery-intro-close.visible{ opacity:1; }
+.gallery-intro-ok{
+  margin:0; padding:0; border:0; background:none; cursor:pointer; -webkit-tap-highlight-color:transparent;
+  font-family:var(--body); font-size:inherit; line-height:inherit; text-transform:lowercase; color:var(--ink);
+}
+.gallery-intro-ok:hover, .gallery-intro-ok:focus-visible{ color:var(--accent); }
+.tw-word{ white-space:nowrap; }
+.tw-rest{ visibility:hidden; }
+.tw-caret{ display:inline-block; width:1px; height:1em; margin-left:1px; vertical-align:-0.15em; background:var(--ink-soft); animation:tw-blink 1s steps(1) infinite; }
+@keyframes tw-blink{ 50%{ opacity:0; } }
 .frontispiece-wrap{
   display:inline-flex; align-items:center; justify-content:center; position:relative;
   border:1px solid var(--line); padding:6px; background:var(--paper);
   font:inherit; color:inherit; cursor:pointer;
 }
 .frontispiece-wrap:focus-visible{ outline:2px solid var(--accent); outline-offset:3px; }
-.frontispiece{ display:block; max-width:min(400px, 75vw); max-height:50vh; width:auto; height:auto; }
+.frontispiece{ display:block; max-width:min(700px, 75vw); max-height:50vh; width:auto; height:auto; }
 /* Caption fades in over the bottom of the image on hover */
 .frontispiece-caption{
   display:block; position:absolute; left:6px; right:6px; bottom:6px; margin:0; padding:8px 10px;
@@ -370,8 +425,10 @@ footer .colophon{ text-transform:lowercase; font-family:var(--body); font-size:0
   .stack-page{ --chrome-top:96px; --chrome-bottom:70px; --stack-pad:56px; --stack-gap:24px; }
   .thumb-grid{ gap:32px 16px; }
   .thumb-label{ font-size:15px; }
-  .gallery-page main{ padding-bottom:96px; }
+  .gallery-page main{ padding:max(52px, calc(28vh - 128px)) 0 40px; }
+  .help-bubble{ font-size:15px; }
   .frontispiece{ max-width:min(310px, 78vw); max-height:44vh; }
+  .frontispiece-slot{ height:calc(44vh + 14px); }
   .lightbox{ padding:20px; }
   .lightbox-close{ top:12px; right:14px; }
   /* Keep the gif and links on one line; spacing and type shrink a little on very narrow phones. */

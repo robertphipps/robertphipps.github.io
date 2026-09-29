@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Gallery ✩ — Robert Phipps</title>
+<link rel="icon" type="image/jpg" href="/images/favicon.jpg">
+<link rel="preload" href="fonts/texgyreheros-regular.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="styles.css">
+</head>
+<body class="center-page gallery-page">
+
+<header class="site-logo has-mark">
+  <a class="logo" href="index.html" aria-label="Robert Phipps, home"><img class="logo-anim" src="images/favicon.gif" alt="" width="48" height="48"><img class="logo-static" src="images/favicon.jpg" alt="" width="48" height="48"></a>
+  <span class="page-glyph" role="img" aria-label="Photographs I have taken">&#10025;</span>
+  <div class="gallery-help">
+    <div class="help-clip"><button type="button" class="help-bubble" id="help-bubble">what is this?</button></div>
+    <button type="button" class="help-mark" id="help-mark" aria-label="About this gallery" aria-expanded="false" aria-controls="help-bubble"><img src="images/gallery-help.jpg" alt="" width="48" height="48"></button>
+  </div>
+</header>
+
+<div class="wrap crumb-row">
+  <a class="breadcrumb" href="gallery.html" aria-label="Back to gallery">← ࣪ ִֶָ☾.</a>
+</div>
+
+<main>
+  <div class="wrap"><div class="gallery-intro" id="gallery-intro" aria-live="off"></div></div>
+  <div class="gallery-stage">
+    <div class="frontispiece-slot">
+      <button type="button" class="frontispiece-wrap" id="frontispiece-wrap" aria-label="Enlarge image">
+        <img class="frontispiece" id="frontispiece-img" alt="">
+      </button>
+    </div>
+    <button type="button" class="gallery-refresh" id="gallery-refresh" aria-label="Show another image">&#8634;</button>
+  </div>
+</main>
+
+<div class="lightbox" id="lightbox" role="dialog" aria-modal="true" aria-label="Enlarged image" aria-hidden="true">
+  <button class="lightbox-close" id="lightbox-close" aria-label="Close">&times;</button>
+  <img class="lightbox-img" id="lightbox-img" src="" alt="">
+</div>
+
+<!-- The text typed out when "what is this?" is clicked. Edit or add <p> paragraphs here. -->
+<template id="gallery-intro-text">
+  <p>This is a gallery of photographs I have taken. It is an ever-expanding and indiscriminate collection of images, objects, textures, scenes, scenarios, people.</p>
+  <p>Images are shown at random. Click the shuffle button below or reload the page to see something different. Or close the website altogether. You choose.</p>
+</template>
+
+<script src="gallery-help.js"></script>
+<script>
+(function(){
+  // Photographs in images/gallery/mine/. To add one, drop the .webp into that folder
+  // and add its path to this list.
+  var images = [
+    "images/gallery/mine/ita-1.webp",
+    "images/gallery/mine/ita-2.webp",
+    "images/gallery/mine/ita-3.webp",
+    "images/gallery/mine/ita-4.webp",
+    "images/gallery/mine/ita-5.webp",
+    "images/gallery/mine/ita-6.webp",
+    "images/gallery/mine/ita-7.webp",
+    "images/gallery/mine/ita-8.webp",
+    "images/gallery/mine/ita-9.webp",
+    "images/gallery/mine/ita-10.webp",
+    "images/gallery/mine/ita-11.webp",
+    "images/gallery/mine/ita-12.webp",
+    "images/gallery/mine/ita-13.webp",
+    "images/gallery/mine/ita-14.webp",
+    "images/gallery/mine/ita-15.webp",
+    "images/gallery/mine/ita-16.webp",
+    "images/gallery/mine/ita-17.webp",
+    "images/gallery/mine/ita-18.webp",
+    "images/gallery/mine/ita-19.webp",
+    "images/gallery/mine/ita-20.webp",
+    "images/gallery/mine/ita-21.webp",
+    "images/gallery/mine/ita-22.webp",
+    "images/gallery/mine/ita-23.webp",
+    "images/gallery/mine/ita-24.webp",
+    "images/gallery/mine/ita-25.webp",
+    "images/gallery/mine/ita-26.webp",
+    "images/gallery/mine/ita-27.webp",
+    "images/gallery/mine/ita-28.webp",
+    "images/gallery/mine/ita-29.webp",
+    "images/gallery/mine/ita-30.webp",
+    "images/gallery/mine/ita-31.webp",
+    "images/gallery/mine/ita-32.webp",
+    "images/gallery/mine/ita-33.webp",
+    "images/gallery/mine/ita-34.webp",
+    "images/gallery/mine/ita-35.webp",
+    "images/gallery/mine/ita-36.webp",
+    "images/gallery/mine/ita-37.webp",
+    "images/gallery/mine/ita-38.webp",
+    "images/gallery/mine/ita-39.webp",
+    "images/gallery/mine/ita-40.webp",
+    "images/gallery/mine/ita-41.webp",
+    "images/gallery/mine/ita-42.webp",
+    "images/gallery/mine/ita-43.webp",
+    "images/gallery/mine/ita-44.webp",
+    "images/gallery/mine/ita-45.webp",
+    "images/gallery/mine/ita-46.webp",
+    "images/gallery/mine/ita-47.webp",
+    "images/gallery/mine/ita-48.webp",
+    "images/gallery/mine/ita-49.webp",
+    "images/gallery/mine/ita-50.webp",
+    "images/gallery/mine/ita-51.webp",
+    "images/gallery/mine/ita-52.webp",
+    "images/gallery/mine/ita-53.webp",
+    "images/gallery/mine/ita-54.webp",
+    "images/gallery/mine/ita-55.webp",
+    "images/gallery/mine/ita-56.webp"
+  ];
+
+  // Shuffled "deck": every image is shown once before any repeats, and the same image is
+  // never shown twice in a row (even across a reshuffle).
+  var deck = [], pick = null;
+  function nextPick(){
+    if(!deck.length){
+      deck = images.slice();
+      for(var i = deck.length - 1; i > 0; i--){
+        var j = Math.floor(Math.random() * (i + 1)), t = deck[i]; deck[i] = deck[j]; deck[j] = t;
+      }
+      if(deck.length > 1 && deck[deck.length - 1] === pick){ deck.unshift(deck.pop()); }
+    }
+    return deck.pop();
+  }
+
+  var wrap = document.getElementById("frontispiece-wrap");
+  var img = document.getElementById("frontispiece-img");
+  var refreshBtn = document.getElementById("gallery-refresh");
+  var lightbox = document.getElementById("lightbox");
+  var lightboxImg = document.getElementById("lightbox-img");
+  var closeBtn = document.getElementById("lightbox-close");
+  var ALT = "Photograph by Robert Phipps";
+
+  function show(){
+    img.alt = ALT;
+    img.src = pick;
+  }
+  pick = nextPick();
+  show();
+
+  // Swap in the next image only once it has loaded, so the frame never flashes empty.
+  refreshBtn.addEventListener("click", function(){
+    var next = nextPick(), loader = new Image();
+    loader.onload = loader.onerror = function(){ pick = next; show(); };
+    loader.src = next;
+  });
+
+  function openLightbox(){
+    lightboxImg.src = pick;
+    lightboxImg.alt = ALT;
+    lightbox.classList.add("active");
+    lightbox.setAttribute("aria-hidden", "false");
+    document.body.style.overflow = "hidden";
+    closeBtn.focus();
+  }
+  function closeLightbox(){
+    if(!lightbox.classList.contains("active")) return;
+    lightbox.classList.remove("active");
+    lightbox.setAttribute("aria-hidden", "true");
+    document.body.style.overflow = "";
+    wrap.focus();
+  }
+
+  wrap.addEventListener("click", openLightbox);
+  closeBtn.addEventListener("click", closeLightbox);
+  lightbox.addEventListener("click", function(e){
+    if(e.target === lightbox){ closeLightbox(); }
+  });
+  document.addEventListener("keydown", function(e){
+    if(e.key === "Escape"){ closeLightbox(); }
+  });
+})();
+</script>
+</body>
+</html>
