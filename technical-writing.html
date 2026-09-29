@@ -13,7 +13,7 @@
 
 <header class="site-logo has-mark">
   <a class="logo" href="index.html" aria-label="Robert Phipps, home"><img class="logo-anim" src="images/favicon.gif" alt="" width="48" height="48"><img class="logo-static" src="images/favicon.jpg" alt="" width="48" height="48"></a>
-  <img class="page-mark" src="images/writing-technical.jpg" alt="Technical writing" width="48" height="48">
+  <button type="button" class="page-mark-btn" data-sound="audio/technicalwriting.wav" aria-label="Technical writing (play sound)"><img class="page-mark" src="images/writing-technical.jpg" alt="Technical writing" width="48" height="48"></button>
 </header>
 
 <main>
@@ -90,5 +90,21 @@
 </footer>
 
 <script>document.getElementById('year').textContent = new Date().getFullYear();</script>
+<script>
+/* Header marker: clicking it plays its audio cue (restarts if already playing). */
+(function(){
+  var btn = document.querySelector('.page-mark-btn');
+  if (!btn) return;
+  var sound = new Audio(btn.getAttribute('data-sound'));
+  sound.preload = 'auto';
+  btn.addEventListener('click', function(){
+    try {
+      sound.currentTime = 0;
+      var p = sound.play();
+      if (p && p.catch) p.catch(function(){});
+    } catch(err){}
+  });
+})();
+</script>
 </body>
 </html>

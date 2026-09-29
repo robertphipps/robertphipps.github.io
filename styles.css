@@ -135,6 +135,9 @@ header.has-mark{
 }
 /* The marker is a plain image (not a link) - it only indicates the current page. */
 .page-mark{ display:block; flex:0 0 auto; width:var(--logo-size); height:var(--logo-size); object-fit:cover; }
+/* Variant of the marker that plays a sound when clicked (technical writing, essays & fiction).
+   Deliberately has no hover/active dimming, so the highlight effect stays exclusive to page links. */
+.page-mark-btn{ display:block; flex:0 0 auto; margin:0; padding:0; border:0; background:none; font:inherit; line-height:0; cursor:pointer; -webkit-tap-highlight-color:transparent; }
 /* Optional link-button on the right of the header (same row and size as the logo and marker),
    lined up with the right edge of the text column. Used on the Essays & Fiction page for Substack. */
 .header-link{ display:block; margin-left:auto; flex:0 0 auto; line-height:0; }
@@ -359,31 +362,6 @@ footer .colophon{ text-transform:lowercase; font-family:var(--body); font-size:0
 }
 .lightbox-close:hover, .lightbox-close:focus-visible{ color:var(--accent); }
 
-/* ============ PAGE TRANSITIONS ============ */
-@media not (prefers-reduced-motion: reduce){
-  @view-transition{ navigation: auto; }
-
-  ::view-transition-old(root){ animation: page-out .32s ease both; }
-  ::view-transition-new(root){ animation: page-in .38s ease both; }
-
-  @keyframes page-out{ to{ opacity:0; transform:translateY(-10px); } }
-  @keyframes page-in{ from{ opacity:0; transform:translateY(10px); } }
-
-  /* Exempt the masthead from the page transition — it gets its own
-     named view-transition-group so the browser tracks it as continuous
-     across the navigation, then we strip that group's animation so it
-     just stays put instead of fading with the rest of the page. */
-  header{ view-transition-name: masthead; }
-  ::view-transition-group(masthead){ animation: none; }
-  /* Hide the outgoing masthead snapshot immediately rather than leaving
-     it stacked at full opacity under the new one — with both old and
-     new visible for the transition's duration, the un-animated pair
-     rendered on top of each other, which is what made the masthead
-     look doubled/thicker for a moment. */
-  ::view-transition-old(masthead){ display: none; }
-  ::view-transition-new(masthead){ animation: none; mix-blend-mode: normal; }
-}
-
 /* ============ RESPONSIVE ============ */
 @media (max-width:560px){
   :root{ --gutter:26px; --nav-gap:20px; --logo-size:36px; --nav-font:17px; }
@@ -396,8 +374,10 @@ footer .colophon{ text-transform:lowercase; font-family:var(--body); font-size:0
   .frontispiece{ max-width:min(310px, 78vw); max-height:44vh; }
   .lightbox{ padding:20px; }
   .lightbox-close{ top:12px; right:14px; }
-  .title-page .navbar{ flex-direction:column; align-items:center; gap:18px; }
-  .title-page .nav-links{ justify-content:center; gap:6px var(--nav-gap); }
+  /* Keep the gif and links on one line; spacing and type shrink a little on very narrow phones. */
+  .title-page{ --nav-gap:clamp(10px, 3.6vw, 20px); --nav-font:clamp(14px, 4.4vw, 17px); }
+  .title-page .navbar{ flex-wrap:nowrap; justify-content:center; }
+  .title-page .nav-links{ flex-wrap:nowrap; justify-content:center; white-space:nowrap; }
   main{ padding-top:32px; }
   .exp-top{ flex-direction:column; gap:2px; }
   .contact-links{ flex-direction:column; align-items:center; gap:6px; }

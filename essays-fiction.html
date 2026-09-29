@@ -12,7 +12,7 @@
 
 <header class="site-logo has-mark">
   <a class="logo" href="index.html" aria-label="Robert Phipps, home"><img class="logo-anim" src="images/favicon.gif" alt="" width="48" height="48"><img class="logo-static" src="images/favicon.jpg" alt="" width="48" height="48"></a>
-  <img class="page-mark" src="images/writing-essays.jpg" alt="Essays &amp; fiction" width="48" height="48">
+  <button type="button" class="page-mark-btn" data-sound="audio/essaysfiction.wav" aria-label="Essays &amp; fiction (play sound)"><img class="page-mark" src="images/writing-essays.jpg" alt="Essays &amp; fiction" width="48" height="48"></button>
   <a class="header-link" href="https://robertphipps.substack.com/" target="_blank" rel="noopener noreferrer" aria-label="Substack"><img src="images/essays-substack.jpg" alt="" width="48" height="48"></a>
 </header>
 
@@ -111,6 +111,22 @@
 
   // Returning via the back button (page restored from cache) - put everything back.
   window.addEventListener('pageshow', function(e){ if (e.persisted) reset(); });
+})();
+</script>
+<script>
+/* Header marker: clicking it plays its audio cue (restarts if already playing). */
+(function(){
+  var btn = document.querySelector('.page-mark-btn');
+  if (!btn) return;
+  var sound = new Audio(btn.getAttribute('data-sound'));
+  sound.preload = 'auto';
+  btn.addEventListener('click', function(){
+    try {
+      sound.currentTime = 0;
+      var p = sound.play();
+      if (p && p.catch) p.catch(function(){});
+    } catch(err){}
+  });
 })();
 </script>
 </body>
