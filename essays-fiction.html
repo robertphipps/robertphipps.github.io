@@ -3,32 +3,38 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Essays & Fiction — Robert Phipps</title>
+<title>Essays &amp; Fiction — Robert Phipps</title>
 <link rel="icon" type="image/jpg" href="/images/favicon.jpg">
 <link rel="preload" href="fonts/texgyreheros-regular.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="stylesheet" href="styles.css">
 </head>
-<body class="stack-page">
+<body>
 
 <header class="site-logo has-mark">
   <a class="logo" href="index.html" aria-label="Robert Phipps, home"><img class="logo-anim" src="images/favicon.gif" alt="" width="48" height="48"><img class="logo-static" src="images/favicon.jpg" alt="" width="48" height="48"></a>
   <img class="page-mark" src="images/writing-essays.jpg" alt="Essays &amp; fiction" width="48" height="48">
+  <a class="header-link" href="https://robertphipps.substack.com/" target="_blank" rel="noopener noreferrer" aria-label="Substack"><img src="images/essays-substack.jpg" alt="" width="48" height="48"></a>
 </header>
 
-<div class="wrap crumb-row">
-  <a class="breadcrumb" href="writing.html">← Writing</a>
-</div>
-
 <main>
-  <div class="wrap writing-split split-stack">
-    <a class="split-item" href="https://robertphipps.substack.com/" target="_blank" rel="noopener noreferrer" aria-label="Substack" data-mark="images/essays-substack.jpg" data-mark-alt="Substack">
-      <span class="stack-caption" aria-hidden="true"><span>l</span><span>e</span><span>a</span><span>v</span><span>e</span></span>
-      <img src="images/essays-substack.jpg" alt="" width="360" height="360">
-    </a>
-    <a class="split-item" href="essays-portfolio.html" aria-label="Portfolio" data-mark="images/essays-portfolio.jpg" data-mark-alt="Portfolio">
-      <img src="images/essays-portfolio.jpg" alt="" width="360" height="360">
-      <span class="stack-caption" aria-hidden="true"><span>s</span><span>t</span><span>a</span><span>y</span></span>
-    </a>
+  <div class="wrap">
+    <a class="breadcrumb" href="writing.html">← Writing</a>
+    <!-- To add a piece: copy a pieces/piece-N.html file, add a matching thumbnail in
+         images/essays/, then copy one <li> below and point it at the new page. -->
+    <ul class="thumb-grid">
+      <li>
+        <a class="thumb" href="pieces/there.html">
+          <img src="images/essays/there.jpg" alt="" loading="lazy">
+          <span class="thumb-label">The There</span>
+        </a>
+      </li>
+      <li>
+        <a class="thumb" href="pieces/rusticators.html">
+          <img src="images/essays/rusticators.jpg" alt="" loading="lazy">
+          <span class="thumb-label">The Rusticators</span>
+        </a>
+      </li>
+    </ul>
   </div>
 </main>
 
@@ -38,21 +44,73 @@
 
 <script>document.getElementById('year').textContent = new Date().getFullYear();</script>
 <script>
-/* Clicking "leave" or "stay" swaps the header icon to that link's image (dancers / hand in water). */
-(function () {
+/* Substack link: on click, the Substack image slides across the header to the page-marker image,
+   leave.wav plays as it starts moving, and the Substack page opens once it arrives.
+   Without JS (or with reduced motion / modified clicks) the link behaves as a normal link. */
+(function(){
+  var link = document.querySelector('.header-link');
   var mark = document.querySelector('.page-mark');
-  var original = { src: mark.getAttribute('src'), alt: mark.alt };
-  document.querySelectorAll('[data-mark]').forEach(function (link) {
-    new Image().src = link.dataset.mark;            /* preload so the swap is instant */
-    link.addEventListener('click', function () {
-      mark.src = link.dataset.mark;
-      mark.alt = link.dataset.markAlt;
-    });
+  if (!link || !mark) return;
+  var img = link.querySelector('img');
+
+  var MOVE_MS = 1900;   // how long the slide takes
+  var HOLD_MS = 250;    // pause after arriving, before the page opens
+  var RETURN_MS = 500;  // slide back to the corner afterwards
+
+  var sound = new Audio('audio/leave.wav');
+  sound.preload = 'auto';
+
+  var reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
+  var busy = false, anim = null;
+
+  function reset(){
+    if (anim){ anim.cancel(); anim = null; }
+    link.classList.remove('is-moving');
+    busy = false;
+  }
+
+  function openSubstack(){
+    var w = window.open(link.href, '_blank');
+    if (w){ try { w.opener = null; } catch(e){} }
+    else { window.location.href = link.href; }   // pop-up blocked: open in this tab instead
+  }
+
+  link.addEventListener('click', function(e){
+    if (e.defaultPrevented || e.button !== 0 || e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return;
+    if (reduceMotion.matches || !img.animate) return;   // fall back to the plain link
+    e.preventDefault();
+    if (busy) return;
+    busy = true;
+
+    var from = img.getBoundingClientRect();
+    var to = mark.getBoundingClientRect();
+    var dx = to.left - from.left, dy = to.top - from.top;
+
+    link.classList.add('is-moving');
+    try {
+      sound.currentTime = 0;
+      var p = sound.play();
+      if (p && p.catch) p.catch(function(){});
+    } catch(err){}
+
+    anim = img.animate(
+      [{ transform: 'translate(0,0)' }, { transform: 'translate(' + dx + 'px,' + dy + 'px)' }],
+      { duration: MOVE_MS, easing: 'ease-in-out', fill: 'forwards' }
+    );
+    anim.finished.then(function(){
+      return new Promise(function(r){ setTimeout(r, HOLD_MS); });
+    }).then(function(){
+      openSubstack();
+      return new Promise(function(r){ setTimeout(r, 400); });
+    }).then(function(){
+      if (!anim) return;
+      anim.updatePlaybackRate(-1);   // glide back to its corner
+      return anim.finished.catch(function(){});
+    }).then(reset, reset);
   });
-  /* coming back with the browser's back button: restore the default icon */
-  window.addEventListener('pageshow', function (e) {
-    if (e.persisted) { mark.src = original.src; mark.alt = original.alt; }
-  });
+
+  // Returning via the back button (page restored from cache) - put everything back.
+  window.addEventListener('pageshow', function(e){ if (e.persisted) reset(); });
 })();
 </script>
 </body>

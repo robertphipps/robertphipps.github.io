@@ -135,6 +135,15 @@ header.has-mark{
 }
 /* The marker is a plain image (not a link) - it only indicates the current page. */
 .page-mark{ display:block; flex:0 0 auto; width:var(--logo-size); height:var(--logo-size); object-fit:cover; }
+/* Optional link-button on the right of the header (same row and size as the logo and marker),
+   lined up with the right edge of the text column. Used on the Essays & Fiction page for Substack. */
+.header-link{ display:block; margin-left:auto; flex:0 0 auto; line-height:0; }
+.header-link img{ display:block; width:var(--logo-size); height:var(--logo-size); object-fit:cover; transition:opacity .2s ease; }
+.header-link:hover img, .header-link:focus-visible img{ opacity:.7; }
+/* While the slide-to-marker animation runs (see essays-fiction.html), the image travels above the
+   marker and stays fully opaque. */
+.header-link{ position:relative; z-index:2; }
+.header-link.is-moving img{ opacity:1; }
 
 .btn{ font-family:var(--body); font-size:0.789rem; text-decoration:none; padding:10px 4px; border-bottom:1px solid var(--ink); }
 .btn:hover{ border-color:var(--accent); color:var(--accent); }
