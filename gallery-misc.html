@@ -15,12 +15,12 @@
   <span class="page-glyph" role="img" aria-label="Images I have collected">&#10023;</span>
   <div class="gallery-help">
     <div class="help-clip"><button type="button" class="help-bubble" id="help-bubble">what is this?</button></div>
-    <button type="button" class="help-mark" id="help-mark" aria-label="About this gallery" aria-expanded="false" aria-controls="help-bubble"><img src="images/gallery-help.jpg" alt="" width="48" height="48"></button>
+    <button type="button" class="help-mark" id="help-mark" aria-label="About this gallery" aria-expanded="false" aria-controls="help-bubble"><span class="help-cursor" aria-hidden="true"></span><img class="help-glyph" src="images/gallery-help.jpg" alt="" width="48" height="48" aria-hidden="true"></button>
   </div>
 </header>
 
 <div class="wrap crumb-row">
-  <a class="breadcrumb" href="gallery.html" aria-label="Back to gallery">← ࣪ ִֶָ☾.</a>
+  <a class="breadcrumb" href="gallery.html" aria-label="Back to gallery">←<span class="crumb-moon"> ࣪ ִֶָ☾</span>.</a>
 </div>
 
 <main>
@@ -45,8 +45,8 @@
 
 <!-- The text typed out when "what is this?" is clicked. Edit or add <p> paragraphs here. -->
 <template id="gallery-intro-text">
-  <p>This is a gallery of images made by other people that have affected me in some way. Think of its purpose as a sort of blog, maybe. Whenever possible, captions are provided to give context and credit.</p>
-  <p>Images are shown at random. Click the shuffle button below or reload the page to see something different. Or close the website altogether. You choose.</p>
+  <p>This page is a digital gallery of images made by other people that have affected me in some way. Think of its purpose as a sort of blog, maybe. Whenever possible, captions are provided to give context and credit.</p>
+  <p>Images are shown at random. Click the cycle button below or reload the page to see something different.</p>
 </template>
 
 <script src="gallery-help.js"></script>

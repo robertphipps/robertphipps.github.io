@@ -15,12 +15,12 @@
   <span class="page-glyph" role="img" aria-label="Photographs I have taken">&#10025;</span>
   <div class="gallery-help">
     <div class="help-clip"><button type="button" class="help-bubble" id="help-bubble">what is this?</button></div>
-    <button type="button" class="help-mark" id="help-mark" aria-label="About this gallery" aria-expanded="false" aria-controls="help-bubble"><span class="help-cursor" aria-hidden="true"></span><img class="help-glyph" src="images/gallery-help.jpg" alt="" width="48" height="48" aria-hidden="true"></button>
+    <button type="button" class="help-mark" id="help-mark" aria-label="About this gallery" aria-expanded="false" aria-controls="help-bubble"><img src="images/gallery-help.jpg" alt="" width="48" height="48"></button>
   </div>
 </header>
 
 <div class="wrap crumb-row">
-  <a class="breadcrumb" href="gallery.html" aria-label="Back to gallery">←<span class="crumb-moon"> ࣪ ִֶָ☾</span>.</a>
+  <a class="breadcrumb" href="gallery.html" aria-label="Back to gallery">← ࣪ ִֶָ☾.</a>
 </div>
 
 <main>
@@ -35,10 +35,6 @@
   </div>
 </main>
 
-<footer>
-  <div class="colophon">© <span id="year"></span> Robert Phipps</div>
-</footer>
-
 <div class="lightbox" id="lightbox" role="dialog" aria-modal="true" aria-label="Enlarged image" aria-hidden="true">
   <button class="lightbox-close" id="lightbox-close" aria-label="Close">&times;</button>
   <img class="lightbox-img" id="lightbox-img" src="" alt="">
@@ -46,12 +42,11 @@
 
 <!-- The text typed out when "what is this?" is clicked. Edit or add <p> paragraphs here. -->
 <template id="gallery-intro-text">
-  <p>This page is a digital gallery of photos I have taken. It is an ever-expanding and indiscriminate collection of images, objects, textures, scenes, scenarios, people.</p>
-  <p>Images are shown at random. Click the cycle button below or reload the page to see something different.</p>
+  <p>This is a gallery of photographs I have taken. It is an ever-expanding and indiscriminate collection of images, objects, textures, scenes, scenarios, people.</p>
+  <p>Images are shown at random. Click the shuffle button below or reload the page to see something different. Or close the website altogether. You choose.</p>
 </template>
 
 <script src="gallery-help.js"></script>
-<script>document.getElementById('year').textContent = new Date().getFullYear();</script>
 <script>
 (function(){
   // Photographs in images/gallery/mine/. To add one, drop the .webp into that folder

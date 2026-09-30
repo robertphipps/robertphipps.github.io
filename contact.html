@@ -8,25 +8,63 @@
 <link rel="preload" href="fonts/texgyreheros-regular.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="stylesheet" href="styles.css">
 </head>
-<body class="center-page">
+<body class="center-page contact-page">
 
 <header class="site-logo">
   <a class="logo" href="index.html" aria-label="Robert Phipps, home"><img class="logo-anim" src="images/favicon.gif" alt="" width="48" height="48"><img class="logo-static" src="images/favicon.jpg" alt="" width="48" height="48"></a>
 </header>
 
 <main>
-  <div class="wrap contact">
-    <div class="contact-links">
-      <p class="contact-email">robmphipps@gmail.com</p>
-      <p class="contact-phone">+1 781 291 0806</p>
+  <div class="wrap contact-stage">
+    <!-- The two glyphs disappear when one is chosen; its content takes their place (contact.js).
+         Escape or the x brings the glyphs back. -->
+    <div class="writing-split glyph-split" id="contact-choices">
+      <button type="button" class="split-item" id="open-email" aria-label="Send me an email" aria-expanded="false" aria-controls="email-panel"><span class="split-glyph" data-center data-center-x aria-hidden="true">&#x1F582;&#xFE0E;</span></button>
+      <button type="button" class="split-item" id="open-phone" aria-label="Show my phone number" aria-expanded="false" aria-controls="phone-panel"><span class="split-glyph" data-center data-center-x aria-hidden="true">&#9990;&#xFE0E;</span></button>
+    </div>
+
+    <!-- Email form. Posts to FormSubmit (formsubmit.co), which forwards the message to the address in the
+         action URL; the first message ever sent triggers a one-time confirmation email to that address. -->
+    <div class="contact-pane" id="email-panel" role="region" aria-label="Send me an email" hidden>
+      <form class="cf" id="email-form" novalidate action="https://formsubmit.co/robmphipps@gmail.com" method="POST">
+        <div class="cf-head"><span class="cf-title"><span class="cf-mark" data-center aria-hidden="true">&#x1F582;&#xFE0E;</span><span class="cf-addr">robmphipps@gmail.com</span></span><button type="button" class="cf-close" aria-label="Close"></button></div>
+        <div class="cf-row">
+          <label class="cf-field"><span class="cf-label"><span>name<span class="cf-err" aria-live="polite"></span></span><span aria-hidden="true">*</span></span><input type="text" name="name" autocomplete="name" required></label>
+          <label class="cf-field"><span class="cf-label"><span>email<span class="cf-err" aria-live="polite"></span></span><span aria-hidden="true">*</span></span><input type="email" name="email" autocomplete="email" required></label>
+        </div>
+        <label class="cf-field cf-message"><span class="cf-label"><span>message<span class="cf-err" aria-live="polite"></span></span><span aria-hidden="true">*</span></span><textarea name="message" required></textarea></label>
+        <input type="hidden" name="_subject" value="Message from robertphipps.com">
+        <input type="hidden" name="_captcha" value="false">
+        <input type="text" name="_honey" tabindex="-1" autocomplete="off" aria-hidden="true" class="contact-honey">
+        <button type="submit" class="cf-send" aria-label="send">&#10148;&#xFE0E;</button>
+        <p class="contact-status" id="email-status" role="status" aria-live="polite"></p>
+      </form>
+    </div>
+
+    <!-- Phone: same frame as the email box. The number is typed out when this opens (contact.js); the two buttons
+         below it (text = sms: link, call = tel: link) become active once the number is complete. -->
+    <div class="contact-pane contact-pane-phone" id="phone-panel" role="region" aria-label="Call or text me" hidden>
+      <div class="cf">
+        <div class="cf-head"><span class="cf-title"><span class="cf-mark" data-center aria-hidden="true">&#9990;&#xFE0E;</span></span><button type="button" class="cf-close" aria-label="Close"></button></div>
+        <div class="cf-field cf-call">
+          <span class="cf-label"><span>#</span></span>
+          <div class="cf-number" id="phone-text" data-number="+1 781 291 0806" data-tel="+17812910806"></div>
+        </div>
+        <div class="cf-acts">
+          <a class="cf-act" id="text-btn" aria-label="text"><span data-center data-center-x aria-hidden="true">&#x1F5E8;&#xFE0E;</span></a>
+          <a class="cf-act" id="call-btn" aria-label="call"><span data-center data-center-x aria-hidden="true">&#9742;&#xFE0E;</span></a>
+        </div>
+      </div>
     </div>
   </div>
 </main>
+
 
 <footer>
   <div class="colophon">© <span id="year"></span> Robert Phipps</div>
 </footer>
 
+<script src="contact.js"></script>
 <script>document.getElementById('year').textContent = new Date().getFullYear();</script>
 </body>
 </html>

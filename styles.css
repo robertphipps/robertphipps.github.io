@@ -16,6 +16,7 @@
 
 :root{
   --paper:      #FFFFFF;
+  --bg:         #dedede;   /* page background (--paper stays white: email box, light text on dark overlays) */
   --paper-alt:  #F7F5F0;
   --ink:        #111111;
   --ink-soft:   #4D4D4D;
@@ -58,7 +59,7 @@ body{
   display:flex;
   flex-direction:column;
   margin:0;
-  background:var(--paper);
+  background:var(--bg);
   color:var(--ink);
   font-family:var(--body);
   font-size:0.82rem;
@@ -103,6 +104,9 @@ header{ padding:55px var(--gutter) 0; }
   color:var(--ink-faint); text-decoration:none; display:inline-block; margin-bottom:6px;
 }
 .breadcrumb:hover{ color:var(--accent); }
+/* The moon glyph (and its combining marks) in the gallery breadcrumb: text-transform:uppercase does nothing to
+   symbols, so they look small next to the capitals; this scales them up without making the row any taller. */
+.crumb-moon{ font-size:1.55em; line-height:0; vertical-align:-0.06em; }
 .breadcrumb + .exp-item{ margin-top:22px; }
 /* Breadcrumb for vertically centred pages: sits where main's top padding ends (same spot as on
    top-aligned pages) but takes up no height, so it doesn't shift the centred content. */
@@ -215,7 +219,7 @@ main{ padding:44px 0 60px; flex:1 0 auto; }
 }
 
 /* Gallery split page: two glyphs stand in for the images. */
-.split-glyph{ font-family:var(--body); font-size:clamp(56px, 14vw, 104px); line-height:1; color:var(--ink); transition:color .2s ease; }
+.split-glyph{ font-family:var(--body), "Noto Sans Symbols 2", "Segoe UI Symbol", "Apple Symbols", sans-serif; font-size:clamp(56px, 14vw, 104px); line-height:1; color:var(--ink); transition:color .2s ease; }
 .split-item:hover .split-glyph, .split-item:focus-visible .split-glyph{ color:var(--accent); }
 
 /* Writing and about pages: the two split images shown large (200px). Scales down on
@@ -271,6 +275,71 @@ blockquote.excerpt{
   border-bottom:1px solid var(--line); width:fit-content;
 }
 .contact-links a:hover{ border-color:var(--accent); color:var(--accent); }
+
+/* Contact page: the two split items are buttons showing glyphs (✉︎ email, ✆ phone). */
+button.split-item{ margin:0; padding:0; border:0; background:none; font:inherit; cursor:pointer; -webkit-tap-highlight-color:transparent; }
+button.split-item:focus{ outline:none; }
+button.split-item:focus-visible .split-glyph{ color:var(--accent); }
+
+/* Contact page (contact.js): choosing a glyph hides both and shows its content on the page itself (no pop-up,
+   no animation). */
+.contact-stage{ display:flex; flex-direction:column; align-items:center; }
+.writing-split[hidden], .contact-pane[hidden]{ display:none; }
+.contact-pane{ width:100%; max-width:560px; margin:0 auto; }
+
+/* Email form: a light-grey title bar (envelope at the left, x at the right), boxed fields with an underlined
+   lowercase label and a * at the right, a large message box, and a full-width light-grey send-arrow bar. */
+.cf{ --bar:#dedede; border:1px solid var(--ink); padding:8px; background:var(--paper); font-family:var(--body); }
+.cf-head{ display:flex; align-items:center; justify-content:space-between; height:30px; padding:0 0 0 8px; background:var(--bar); color:var(--ink); line-height:1; }
+.cf-title{ display:flex; align-items:center; gap:8px; min-width:0; }
+.cf-addr{ font-size:13px; line-height:1.6; letter-spacing:.01em; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; user-select:text; }
+.cf-mark{ flex:0 0 auto; font-size:18px; line-height:1; font-family:var(--body), "Noto Sans Symbols 2", "Segoe UI Symbol", "Apple Symbols", sans-serif; }
+/* The x is drawn with two bars rather than a character, so it sits exactly in the middle of the bar. */
+.cf-close{ position:relative; align-self:stretch; width:30px; margin:0; padding:0; border:0; background:none; cursor:pointer; color:var(--ink); -webkit-tap-highlight-color:transparent; }
+.cf-close::before, .cf-close::after{ content:""; position:absolute; left:50%; top:50%; width:13px; height:1.5px; margin:-.75px 0 0 -6.5px; background:currentColor; transform:rotate(45deg); }
+.cf-close::after{ transform:rotate(-45deg); }
+.cf-close:hover, .cf-close:focus-visible{ color:var(--accent); outline:none; }
+.cf-row{ display:flex; gap:8px; margin-top:8px; }
+.cf-row .cf-field{ flex:1 1 0; min-width:0; }
+.cf-field{ display:block; margin:0; padding:7px 7px 0; border:1px solid var(--ink); }
+.cf-row + .cf-message{ margin-top:8px; }
+.cf-field:focus-within{ border-color:var(--accent); }
+.cf-label{ display:flex; justify-content:space-between; padding-bottom:3px; border-bottom:1px solid var(--ink); font-size:13px; line-height:1.3; text-transform:lowercase; color:var(--ink); }
+.cf-err{ margin-left:10px; font-size:12px; color:#c62828; }
+.cf-err:empty{ display:none; }
+.cf-field:focus-within .cf-label{ border-bottom-color:var(--accent); }
+.cf-field input[type="text"], .cf-field input[type="email"], .cf-field textarea{
+  display:block; width:100%; margin:0; padding:8px 0; border:0; border-radius:0; background:none; outline:none;
+  font-family:var(--body); font-size:16px; line-height:1.5; color:var(--ink);
+}
+.cf-field input{ height:40px; }
+.cf-field textarea{ height:170px; resize:vertical; }
+.cf-send{
+  display:block; width:100%; height:44px; margin:8px 0 0; padding:0; border:0; border-radius:0; cursor:pointer;
+  background:var(--bar); color:var(--ink); font-family:var(--body), "Noto Sans Symbols", "Segoe UI Symbol", "Apple Symbols", sans-serif; font-size:1.3rem; line-height:1;
+}
+.cf-send:hover, .cf-send:focus-visible{ color:var(--accent); outline:none; }
+.cf-send:disabled{ opacity:.5; cursor:default; }
+.contact-honey{ position:absolute; left:-9999px; width:1px; height:1px; opacity:0; }
+.contact-status{ margin:0; padding-top:8px; text-align:center; font-family:var(--body); font-size:0.737rem; color:var(--ink-soft); }
+.contact-status:empty{ display:none; }
+.contact-status a{ color:var(--ink); }
+.contact-status a:hover{ color:var(--accent); }
+@media (max-width:560px){ .cf-row{ flex-direction:column; } }
+
+/* Phone box: the same frame as the email form, with a "#" field holding the typed-out number and, below it, two
+   light-grey buttons side by side: text (left) and call (right), inactive until the number has finished typing. */
+.contact-pane-phone{ max-width:420px; }
+.cf-call{ padding-bottom:7px; }
+.cf-number{ display:flex; align-items:center; min-height:44px; margin-top:7px; font-size:1.25rem; letter-spacing:.02em; color:var(--ink); white-space:nowrap; }
+.cf-number .tw-caret{ background:var(--ink); height:1.1em; width:2px; margin-left:3px; }
+.cf-acts{ display:flex; gap:8px; margin-top:8px; }
+.cf-act{
+  flex:1 1 0; display:flex; align-items:center; justify-content:center; height:44px; background:var(--bar, #dedede); color:var(--ink); text-decoration:none;
+  font-family:var(--body), "Noto Sans Symbols 2", "Noto Sans Symbols", "Segoe UI Symbol", "Apple Symbols", sans-serif; font-size:1.3rem; line-height:1; -webkit-tap-highlight-color:transparent;
+}
+.cf-act:not([href]){ opacity:.4; pointer-events:none; }
+.cf-act:hover, .cf-act:focus-visible{ color:var(--accent); outline:none; }
 
 footer{ width:100%; max-width:calc(var(--nav-max) + var(--gutter) * 2); margin:auto auto 0; padding:24px var(--gutter) 28px; text-align:center; }
 footer .colophon{ text-transform:lowercase; font-family:var(--body); font-size:0.737rem; color:var(--ink-faint); }
@@ -340,9 +409,9 @@ footer .colophon{ text-transform:lowercase; font-family:var(--body); font-size:0
    text then pushes the image down); the minimum leaves room for the breadcrumb. */
 .gallery-page main{ display:block; padding:max(52px, calc(25vh - 179px)) 0 60px; }
 /* The image sits in a fixed-height slot, so the refresh button below it stays put whatever
-   the shape of the image (border 1px + padding 6px on each side = 14px). */
-.gallery-stage{ width:100%; display:flex; flex-direction:column; align-items:center; gap:14px; }
-.frontispiece-slot{ display:flex; align-items:center; justify-content:center; height:calc(50vh + 14px); }
+   the shape of the image. */
+.gallery-stage{ width:100%; display:flex; flex-direction:column; align-items:center; gap:26px; }
+.frontispiece-slot{ display:flex; align-items:center; justify-content:center; height:50vh; }
 .gallery-refresh{
   margin:0; padding:4px 12px; border:0; background:none; cursor:pointer;
   font-family:var(--body); font-size:1.5rem; line-height:1; color:var(--ink-faint);
@@ -350,22 +419,46 @@ footer .colophon{ text-transform:lowercase; font-family:var(--body); font-size:0
 }
 .gallery-refresh:hover, .gallery-refresh:focus-visible{ color:var(--accent); }
 
-/* "What is this?" helper: an image at the top right of the header. Clicking it slides a label out
-   to its left (the clip box hides the label until it has left the image); clicking the label types
+/* "What is this?" helper: an image at the top right of the header. Clicking it types a label out
+   to its left, starting at the cursor (the clip box keeps it from spilling past the cursor); clicking the label types
    out the gallery's description (gallery-help.js). Like the sound markers, the image doesn't dim on
    hover - that effect is kept for page links. */
 .gallery-help{ position:relative; margin-left:auto; flex:0 0 auto; line-height:0; }
-.help-mark{ position:relative; z-index:2; display:block; margin:0; padding:0; border:0; background:none; cursor:pointer; -webkit-tap-highlight-color:transparent; }
+.help-mark{ mix-blend-mode:multiply; /* the jpg's white background drops out against the grey page */ position:relative; z-index:2; display:flex; align-items:center; height:var(--logo-size); margin:0; padding:0; border:0; background:none; cursor:pointer; -webkit-tap-highlight-color:transparent; }
 .help-mark img{ display:block; width:var(--logo-size); height:var(--logo-size); object-fit:cover; }
-.help-clip{ position:absolute; z-index:1; right:100%; top:50%; transform:translateY(-50%); overflow:hidden; }
-.help-bubble{
-  display:block; margin:0 12px 0 0; padding:0; border:0; background:none;
-  font-family:var(--body); font-size:16px; line-height:1.7; text-transform:lowercase; white-space:nowrap; color:var(--ink);
-  cursor:pointer; -webkit-tap-highlight-color:transparent;
-  transform:translateX(calc(100% + 12px)); visibility:hidden;
-  transition:transform .75s cubic-bezier(.25,.6,.3,1), visibility 0s linear .75s;
+/* Escape hands focus back to the button; no outline box around the image when it does. */
+.help-mark:focus, .help-mark:focus-visible{ outline:none; }
+/* The help control is an image (images/gallery-help.jpg), like the page glyph on the left. Clicking it (gallery-help.js):
+   1. a cursor appears at the left edge of the "?" and swipes right, erasing it (.swiped);
+   2. at the right margin it shrinks to text size (.compact) and the "what is this?" label is typed out of it
+   one letter at a time (the label is right-aligned against the cursor, so it grows leftwards while the cursor
+   stays put), then the cursor blinks (.blink); closing backspaces the label into the cursor, which then grows
+   back before it swipes left. The cursor and the erasing share one transition, so the
+   cursor always sits on the edge of the erased part. */
+.help-cursor{
+  position:absolute; z-index:1; left:0; top:50%; width:2px; height:34px; margin-top:-17px; background:var(--ink); opacity:0;
+  transform-origin:100% 50%;                     /* z-index keeps it above the image; shrinks toward its right edge, so it stays at the margin */
+  transition:left .85s ease-in-out, transform .3s ease;
 }
-.help-bubble.open{ transform:translateX(0); visibility:visible; transition:transform .75s cubic-bezier(.25,.6,.3,1), visibility 0s; }
+.cursor-on .help-cursor{ opacity:1; }
+.swiped .help-cursor{ left:calc(100% - 2px); }
+.compact .help-cursor{ transform:scale(.5, .535); }   /* once the swipe is done: thinner and shorter (about the height of the label text) */
+.blink .help-cursor{ animation:tw-blink 1s steps(1) infinite; }
+@media (prefers-reduced-motion: reduce){ .blink .help-cursor{ animation:none; } }
+.help-glyph{
+  display:block; width:var(--logo-size); height:var(--logo-size); object-fit:cover; user-select:none; -webkit-user-drag:none;
+  clip-path:inset(0 0 0 0); transition:clip-path .85s ease-in-out;
+}
+.swiped .help-glyph{ clip-path:inset(0 0 0 100%); }
+.help-clip{ position:absolute; z-index:3; right:0; top:50%; transform:translateY(-50%); overflow:hidden; pointer-events:none; }
+/* Typed into by gallery-help.js. Right edge sits just left of the cursor; white-space:pre keeps the space
+   between words visible while the last letter typed is a space. */
+.help-bubble{
+  display:block; margin:0 5px 0 0; padding:0; border:0; background:none;
+  font-family:var(--body); font-size:16px; line-height:1.7; text-transform:lowercase; white-space:pre; color:var(--ink);
+  cursor:pointer; -webkit-tap-highlight-color:transparent; visibility:hidden;
+}
+.help-bubble.open{ visibility:visible; pointer-events:auto; }
 .help-bubble:hover, .help-bubble:focus-visible{ color:var(--accent); }
 
 /* Typed-out description above the image */
@@ -379,6 +472,7 @@ footer .colophon{ text-transform:lowercase; font-family:var(--body); font-size:0
 .gallery-intro-ok{
   margin:0; padding:0; border:0; background:none; cursor:pointer; -webkit-tap-highlight-color:transparent;
   font-family:var(--body); font-size:inherit; line-height:inherit; text-transform:lowercase; color:var(--ink);
+  font-variant-emoji:text; /* belt and braces with the U+FE0E in gallery-help.js */
 }
 .gallery-intro-ok:hover, .gallery-intro-ok:focus-visible{ color:var(--accent); }
 .tw-word{ white-space:nowrap; }
@@ -387,14 +481,14 @@ footer .colophon{ text-transform:lowercase; font-family:var(--body); font-size:0
 @keyframes tw-blink{ 50%{ opacity:0; } }
 .frontispiece-wrap{
   display:inline-flex; align-items:center; justify-content:center; position:relative;
-  border:1px solid var(--line); padding:6px; background:var(--paper);
+  margin:0; border:0; padding:0; background:none;
   font:inherit; color:inherit; cursor:pointer;
 }
 .frontispiece-wrap:focus-visible{ outline:2px solid var(--accent); outline-offset:3px; }
 .frontispiece{ display:block; max-width:min(700px, 75vw); max-height:50vh; width:auto; height:auto; }
 /* Caption fades in over the bottom of the image on hover */
 .frontispiece-caption{
-  display:block; position:absolute; left:6px; right:6px; bottom:6px; margin:0; padding:8px 10px;
+  display:block; position:absolute; left:0; right:0; bottom:0; margin:0; padding:8px 10px;
   background:rgba(20, 16, 12, .72); color:var(--paper);
   font-family:var(--body); font-size:0.684rem; line-height:1.4; letter-spacing:.01em; text-align:center;
   opacity:0; transform:translateY(4px); transition:opacity .2s ease, transform .2s ease; pointer-events:none;
@@ -409,7 +503,7 @@ footer .colophon{ text-transform:lowercase; font-family:var(--body); font-size:0
   background:rgba(20, 16, 12, .92); opacity:0; pointer-events:none; transition:opacity .25s ease;
 }
 .lightbox.active{ opacity:1; pointer-events:auto; }
-.lightbox-img{ display:block; max-width:90vw; max-height:78vh; width:auto; height:auto; border:1px solid var(--line); padding:6px; background:var(--paper); }
+.lightbox-img{ display:block; max-width:90vw; max-height:78vh; width:auto; height:auto; }
 .lightbox-caption{ font-family:var(--body); font-size:0.842rem; letter-spacing:.02em; color:var(--paper); text-align:center; max-width:80vw; margin:0; }
 .lightbox-close{
   position:absolute; top:20px; right:24px; font-family:var(--body); font-size:1.6rem; line-height:1;
@@ -428,7 +522,7 @@ footer .colophon{ text-transform:lowercase; font-family:var(--body); font-size:0
   .gallery-page main{ padding:max(52px, calc(28vh - 128px)) 0 40px; }
   .help-bubble{ font-size:15px; }
   .frontispiece{ max-width:min(310px, 78vw); max-height:44vh; }
-  .frontispiece-slot{ height:calc(44vh + 14px); }
+  .frontispiece-slot{ height:44vh; }
   .lightbox{ padding:20px; }
   .lightbox-close{ top:12px; right:14px; }
   /* Keep the gif and links on one line; spacing and type shrink a little on very narrow phones. */
