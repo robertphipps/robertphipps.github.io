@@ -19,7 +19,7 @@
     <!-- The two glyphs disappear when one is chosen; its content takes their place (contact.js).
          Escape or the x brings the glyphs back. -->
     <div class="writing-split glyph-split" id="contact-choices">
-      <button type="button" class="split-item" id="open-email" aria-label="Send me an email" aria-expanded="false" aria-controls="email-panel"><span class="split-glyph" data-center data-center-x aria-hidden="true">&#x1F582;&#xFE0E;</span></button>
+      <button type="button" class="split-item" id="open-email" aria-label="Send me an email" aria-expanded="false" aria-controls="email-panel"><span class="split-glyph" data-center data-center-x data-sym="envelope" aria-hidden="true">&#x1F582;&#xFE0E;</span></button>
       <button type="button" class="split-item" id="open-phone" aria-label="Show my phone number" aria-expanded="false" aria-controls="phone-panel"><span class="split-glyph" data-center data-center-x aria-hidden="true">&#9990;&#xFE0E;</span></button>
     </div>
 
@@ -27,7 +27,7 @@
          action URL; the first message ever sent triggers a one-time confirmation email to that address. -->
     <div class="contact-pane" id="email-panel" role="region" aria-label="Send me an email" hidden>
       <form class="cf" id="email-form" novalidate action="https://formsubmit.co/robmphipps@gmail.com" method="POST">
-        <div class="cf-head"><span class="cf-title"><span class="cf-mark" data-center aria-hidden="true">&#x1F582;&#xFE0E;</span><span class="cf-addr">robmphipps@gmail.com</span></span><button type="button" class="cf-close" aria-label="Close"></button></div>
+        <div class="cf-head"><span class="cf-title"><span class="cf-mark" data-center data-sym="envelope" aria-hidden="true">&#x1F582;&#xFE0E;</span><span class="cf-addr">robmphipps@gmail.com</span></span><button type="button" class="cf-close" aria-label="Close"></button></div>
         <div class="cf-row">
           <label class="cf-field"><span class="cf-label"><span>name<span class="cf-err" aria-live="polite"></span></span><span aria-hidden="true">*</span></span><input type="text" name="name" autocomplete="name" required></label>
           <label class="cf-field"><span class="cf-label"><span>email<span class="cf-err" aria-live="polite"></span></span><span aria-hidden="true">*</span></span><input type="email" name="email" autocomplete="email" required></label>
@@ -51,7 +51,7 @@
           <div class="cf-number" id="phone-text" data-number="+1 781 291 0806" data-tel="+17812910806"></div>
         </div>
         <div class="cf-acts">
-          <a class="cf-act" id="text-btn" aria-label="text"><span data-center data-center-x aria-hidden="true">&#x1F5E8;&#xFE0E;</span></a>
+          <a class="cf-act" id="text-btn" aria-label="text"><span data-center data-center-x data-sym="bubble" aria-hidden="true">&#x1F5E8;&#xFE0E;</span></a>
           <a class="cf-act" id="call-btn" aria-label="call"><span data-center data-center-x aria-hidden="true">&#9742;&#xFE0E;</span></a>
         </div>
       </div>

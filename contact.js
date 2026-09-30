@@ -139,6 +139,36 @@
     }, 450);
   }
 
+  /* ---- symbols a device's fonts may lack ----
+     Some phones have no font containing 🖂 or 🗨, so they show nothing (or an empty box). Each element marked
+     data-sym is tested by drawing its character on a canvas: if nothing is drawn, or it looks the same as a
+     character that certainly doesn't exist, the character is swapped for a small inline SVG drawing of the
+     same thing (drawn in the text colour, so hover colours still work). */
+  var SYM_SVG = {
+    envelope: '<svg viewBox="0 0 88 62" aria-hidden="true"><rect x="3" y="3" width="82" height="56"/><polyline points="3,3 44,36 85,3"/><line x1="3" y1="59" x2="32" y2="30"/><line x1="85" y1="59" x2="56" y2="30"/></svg>',
+    bubble: '<svg viewBox="0 0 64 56" aria-hidden="true"><path d="M5 5H59V38H28L13 51V38H5Z"/></svg>'
+  };
+  function inkSignature(ch, family){
+    var c = document.createElement("canvas"); c.width = c.height = 48;
+    var x = c.getContext("2d", { willReadFrequently: true });
+    if(!x) return null;
+    x.font = "32px " + family;
+    x.textBaseline = "alphabetic";
+    x.fillText(ch + "\uFE0E", 4, 36);
+    var d = x.getImageData(0, 0, 48, 48).data, s = "", any = false;
+    for(var i = 3; i < d.length; i += 4){ if(d[i] > 40){ any = true; s += "1"; } else s += "0"; }
+    return { any: any, s: s };
+  }
+  [].forEach.call(document.querySelectorAll("[data-sym]"), function(el){
+    var family = getComputedStyle(el).fontFamily;
+    var have = inkSignature(el.textContent.replace(/\uFE0E/g, ""), family);
+    var missing = inkSignature("\u{10FFFF}", family);
+    if(!have || !missing) return;                        // can't test: leave the character alone
+    if(have.any && have.s !== missing.s) return;         // the device can draw it
+    el.innerHTML = SYM_SVG[el.getAttribute("data-sym")];
+    el.classList.add("sym-fallback");
+  });
+
   /* ---- optical centring of the symbol glyphs ----
      Symbol characters come from whatever fallback font the device has, and often sit low (or high) in their
      text box. For each element marked data-center, measure where the glyph's ink really is and nudge it so

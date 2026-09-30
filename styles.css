@@ -16,7 +16,6 @@
 
 :root{
   --paper:      #FFFFFF;
-  --bg:         #dedede;   /* page background (--paper stays white: email box, light text on dark overlays) */
   --paper-alt:  #F7F5F0;
   --ink:        #111111;
   --ink-soft:   #4D4D4D;
@@ -59,7 +58,7 @@ body{
   display:flex;
   flex-direction:column;
   margin:0;
-  background:var(--bg);
+  background:var(--paper);
   color:var(--ink);
   font-family:var(--body);
   font-size:0.82rem;
@@ -281,6 +280,12 @@ button.split-item{ margin:0; padding:0; border:0; background:none; font:inherit;
 button.split-item:focus{ outline:none; }
 button.split-item:focus-visible .split-glyph{ color:var(--accent); }
 
+/* Inline drawings used in place of symbols a device has no font for (contact.js). */
+.sym-fallback{ display:flex; align-items:center; justify-content:center; height:1em; }
+.sym-fallback svg{ display:block; width:.88em; height:.62em; overflow:visible; fill:none; stroke:currentColor; stroke-width:6; stroke-linejoin:miter; stroke-linecap:butt; }
+.sym-fallback svg[viewBox="0 0 64 56"]{ width:.8em; height:.7em; stroke-width:5; stroke-linejoin:round; }
+.cf-mark.sym-fallback svg{ stroke-width:7; }
+
 /* Contact page (contact.js): choosing a glyph hides both and shows its content on the page itself (no pop-up,
    no animation). */
 .contact-stage{ display:flex; flex-direction:column; align-items:center; }
@@ -330,7 +335,7 @@ button.split-item:focus-visible .split-glyph{ color:var(--accent); }
 /* Phone box: the same frame as the email form, with a "#" field holding the typed-out number and, below it, two
    light-grey buttons side by side: text (left) and call (right), inactive until the number has finished typing. */
 .contact-pane-phone{ max-width:420px; }
-.cf-call{ padding-bottom:7px; }
+.cf-call{ margin-top:8px; padding-bottom:7px; }
 .cf-number{ display:flex; align-items:center; min-height:44px; margin-top:7px; font-size:1.25rem; letter-spacing:.02em; color:var(--ink); white-space:nowrap; }
 .cf-number .tw-caret{ background:var(--ink); height:1.1em; width:2px; margin-left:3px; }
 .cf-acts{ display:flex; gap:8px; margin-top:8px; }
@@ -424,7 +429,7 @@ footer .colophon{ text-transform:lowercase; font-family:var(--body); font-size:0
    out the gallery's description (gallery-help.js). Like the sound markers, the image doesn't dim on
    hover - that effect is kept for page links. */
 .gallery-help{ position:relative; margin-left:auto; flex:0 0 auto; line-height:0; }
-.help-mark{ mix-blend-mode:multiply; /* the jpg's white background drops out against the grey page */ position:relative; z-index:2; display:flex; align-items:center; height:var(--logo-size); margin:0; padding:0; border:0; background:none; cursor:pointer; -webkit-tap-highlight-color:transparent; }
+.help-mark{ position:relative; z-index:2; display:flex; align-items:center; height:var(--logo-size); margin:0; padding:0; border:0; background:none; cursor:pointer; -webkit-tap-highlight-color:transparent; }
 .help-mark img{ display:block; width:var(--logo-size); height:var(--logo-size); object-fit:cover; }
 /* Escape hands focus back to the button; no outline box around the image when it does. */
 .help-mark:focus, .help-mark:focus-visible{ outline:none; }
