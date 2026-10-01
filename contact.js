@@ -3,7 +3,8 @@
    white background (no animation): ✉︎ an email form (posted to FormSubmit, so no mail program is needed),
    ✆ a box with the phone number typed out letter by letter with a blinking caret, and two buttons below it:
    🗨 to text (an sms: link) and ☎ to call (a tel: link), which become active once the number is complete.
-   The x, or Escape, closes the content and brings the glyphs back. */
+   The x, or Escape, closes the content and brings the glyphs back.
+   Clicking ✉︎ plays audio/email.wav and clicking ✆ plays audio/call.wav. */
 (function(){
   var reduceMotion = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
   var choices = document.getElementById("contact-choices");
@@ -37,8 +38,22 @@
     if(p) p.btn.focus();
   }
 
-  openEmail.addEventListener("click", function(){ show("email"); });
-  openPhone.addEventListener("click", function(){ show("phone"); });
+  // Each glyph plays its own sound when clicked (restarts if it is still playing).
+  function cue(src){
+    var a = new Audio(src);
+    a.preload = "auto";
+    return function(){
+      try {
+        a.currentTime = 0;
+        var p = a.play();
+        if(p && p.catch) p.catch(function(){});
+      } catch(err){}
+    };
+  }
+  var playEmail = cue("audio/email.wav"), playCall = cue("audio/call.wav");
+
+  openEmail.addEventListener("click", function(){ playEmail(); show("email"); });
+  openPhone.addEventListener("click", function(){ playCall(); show("phone"); });
   emailPane.querySelector(".cf-close").addEventListener("click", closePanel);
   phonePane.querySelector(".cf-close").addEventListener("click", closePanel);
   document.addEventListener("keydown", function(e){

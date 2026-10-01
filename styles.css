@@ -138,7 +138,8 @@ header.has-mark{
 }
 /* The marker is a plain image (not a link) - it only indicates the current page. */
 .page-mark{ display:block; flex:0 0 auto; width:var(--logo-size); height:var(--logo-size); object-fit:cover; }
-/* Variant of the marker that plays a sound when clicked (technical writing, essays & fiction).
+/* Variant of the marker that plays a sound when clicked (technical writing, essays & fiction, bio, résumé,
+   both galleries).
    Deliberately has no hover/active dimming, so the highlight effect stays exclusive to page links. */
 .page-mark-btn{ display:block; flex:0 0 auto; margin:0; padding:0; border:0; background:none; font:inherit; line-height:0; cursor:pointer; -webkit-tap-highlight-color:transparent; }
 /* Gallery pages: the split-page glyph (see gallery.html) stands in for the page thumbnail, in the same
@@ -424,47 +425,59 @@ footer .colophon{ text-transform:lowercase; font-family:var(--body); font-size:0
 }
 .gallery-refresh:hover, .gallery-refresh:focus-visible{ color:var(--accent); }
 
-/* "What is this?" helper: an image at the top right of the header. Clicking it types a label out
-   to its left, starting at the cursor (the clip box keeps it from spilling past the cursor); clicking the label types
-   out the gallery's description (gallery-help.js). Like the sound markers, the image doesn't dim on
-   hover - that effect is kept for page links. */
-.gallery-help{ position:relative; margin-left:auto; flex:0 0 auto; line-height:0; }
+/* "What is this?" helper: a bullet at the top right of the header (gallery-help.js).
+   Hover it (touch devices: press it):
+   1. the bullet shrinks and glides onto the spot where the dot of a "?" goes (.shrunk; the offset and size are
+      measured by the script and passed in as --dot-dx / --dot-dy / --dot-s);
+   2. the rest of the "?" appears above that dot (.q-in);
+   3. "what is this" is typed out leftwards from the "?", so with it the phrase reads "what is this?".
+   The "?" is part of the link: it highlights with the words, and clicking it works like clicking them.
+   Moving away (touch devices: tapping outside) plays it all backwards. Like the sound markers, the bullet
+   doesn't dim on hover - that effect is kept for page links. */
+.gallery-help{ --help-font:16px; --help-q-gap:3px; --bullet-d:calc(var(--logo-size) * .56); --dot-dx:0px; --dot-dy:0px; --dot-s:.1; position:relative; margin-left:auto; flex:0 0 auto; line-height:0; }
 .help-mark{ position:relative; z-index:2; display:flex; align-items:center; height:var(--logo-size); margin:0; padding:0; border:0; background:none; cursor:pointer; -webkit-tap-highlight-color:transparent; }
-.help-mark img{ display:block; width:var(--logo-size); height:var(--logo-size); object-fit:cover; }
-/* Escape hands focus back to the button; no outline box around the image when it does. */
+/* Escape hands focus back to the button; no outline box around the bullet when it does. */
 .help-mark:focus, .help-mark:focus-visible{ outline:none; }
-/* The help control is an image (images/gallery-help.jpg), like the page glyph on the left. Clicking it (gallery-help.js):
-   1. a cursor appears at the left edge of the "?" and swipes right, erasing it (.swiped);
-   2. at the right margin it shrinks to text size (.compact) and the "what is this?" label is typed out of it
-   one letter at a time (the label is right-aligned against the cursor, so it grows leftwards while the cursor
-   stays put), then the cursor blinks (.blink); closing backspaces the label into the cursor, which then grows
-   back before it swipes left. The cursor and the erasing share one transition, so the
-   cursor always sits on the edge of the erased part. */
-.help-cursor{
-  position:absolute; z-index:1; left:0; top:50%; width:2px; height:34px; margin-top:-17px; background:var(--ink); opacity:0;
-  transform-origin:100% 50%;                     /* z-index keeps it above the image; shrinks toward its right edge, so it stays at the margin */
-  transition:left .85s ease-in-out, transform .3s ease;
+/* The bullet: a circle centred in a 48px square (about as big as the star/diamond beside the logo). */
+.help-glyph{ position:relative; display:block; width:var(--logo-size); height:var(--logo-size); user-select:none; }
+.help-glyph::before{
+  content:""; position:absolute; left:50%; top:50%;
+  width:var(--bullet-d); height:var(--bullet-d); margin:calc(var(--bullet-d) / -2) 0 0 calc(var(--bullet-d) / -2);
+  border-radius:50%; background:var(--help-dot, var(--ink));
+  transition:transform .42s cubic-bezier(.55,0,.25,1), background-color .2s ease;
 }
-.cursor-on .help-cursor{ opacity:1; }
-.swiped .help-cursor{ left:calc(100% - 2px); }
-.compact .help-cursor{ transform:scale(.5, .535); }   /* once the swipe is done: thinner and shorter (about the height of the label text) */
-.blink .help-cursor{ animation:tw-blink 1s steps(1) infinite; }
-@media (prefers-reduced-motion: reduce){ .blink .help-cursor{ animation:none; } }
-.help-glyph{
-  display:block; width:var(--logo-size); height:var(--logo-size); object-fit:cover; user-select:none; -webkit-user-drag:none;
-  clip-path:inset(0 0 0 0); transition:clip-path .85s ease-in-out;
+.shrunk .help-glyph::before{ transform:translate(var(--dot-dx), var(--dot-dy)) scale(var(--dot-s)); }
+/* The "?": same 48px box as the bullet, with the glyph laid out like the label text (same font and line
+   height, right-aligned) so it lines up with "what is this". The script clips the glyph's own dot away,
+   because the bullet becomes that dot. */
+.help-q{
+  position:absolute; top:0; right:0; width:var(--logo-size); height:var(--logo-size);
+  display:flex; align-items:center; justify-content:flex-end; padding-right:var(--help-q-gap);
+  box-sizing:border-box; pointer-events:none; user-select:none; line-height:0;
+  opacity:0; transition:opacity .16s ease;
 }
-.swiped .help-glyph{ clip-path:inset(0 0 0 100%); }
-.help-clip{ position:absolute; z-index:3; right:0; top:50%; transform:translateY(-50%); overflow:hidden; pointer-events:none; }
-/* Typed into by gallery-help.js. Right edge sits just left of the cursor; white-space:pre keeps the space
-   between words visible while the last letter typed is a space. */
+.q-in .help-q{ opacity:1; }
+.help-q-glyph{ display:block; font-family:var(--body); font-size:var(--help-font); line-height:1.7; color:var(--ink); transition:color .2s ease; }
+.help-clip{ position:absolute; z-index:3; right:0; top:50%; transform:translateY(-50%); pointer-events:none; }
+/* Typed into by gallery-help.js. Its right edge sits just left of the "?" (the script sets the right margin
+   from the "?" width). */
 .help-bubble{
-  display:block; margin:0 5px 0 0; padding:0; border:0; background:none;
-  font-family:var(--body); font-size:16px; line-height:1.7; text-transform:lowercase; white-space:pre; color:var(--ink);
+  display:block; margin:0 calc(var(--help-q-gap) + 9px) 0 0; padding:0; border:0; background:none;
+  font-family:var(--body); font-size:var(--help-font); line-height:1.7; text-transform:lowercase; white-space:pre; color:var(--ink);
   cursor:pointer; -webkit-tap-highlight-color:transparent; visibility:hidden;
 }
 .help-bubble.open{ visibility:visible; pointer-events:auto; }
 .help-bubble:hover, .help-bubble:focus-visible{ color:var(--accent); }
+/* Hovering/focusing the words or the "?" highlights both (the bullet-turned-dot included). */
+.gallery-help.q-in:has(.help-mark:hover) .help-bubble,
+.gallery-help.q-in:has(.help-mark:focus-visible) .help-bubble,
+.gallery-help.q-in:has(.help-bubble:hover) .help-q-glyph,
+.gallery-help.q-in:has(.help-bubble:focus-visible) .help-q-glyph,
+.gallery-help.q-in:has(.help-mark:hover) .help-q-glyph,
+.gallery-help.q-in:has(.help-mark:focus-visible) .help-q-glyph{ color:var(--accent); }
+.gallery-help.q-in:has(.help-bubble:hover), .gallery-help.q-in:has(.help-bubble:focus-visible),
+.gallery-help.q-in:has(.help-mark:hover), .gallery-help.q-in:has(.help-mark:focus-visible){ --help-dot:var(--accent); }
+@media (prefers-reduced-motion: reduce){ .help-glyph::before, .help-q, .help-q-glyph{ transition:none; } }
 
 /* Typed-out description above the image */
 .gallery-intro{ color:var(--ink-soft); }
@@ -525,7 +538,7 @@ footer .colophon{ text-transform:lowercase; font-family:var(--body); font-size:0
   .thumb-grid{ gap:32px 16px; }
   .thumb-label{ font-size:15px; }
   .gallery-page main{ padding:max(52px, calc(28vh - 128px)) 0 40px; }
-  .help-bubble{ font-size:15px; }
+  .gallery-help{ --help-font:15px; }
   .frontispiece{ max-width:min(310px, 78vw); max-height:44vh; }
   .frontispiece-slot{ height:44vh; }
   .lightbox{ padding:20px; }
