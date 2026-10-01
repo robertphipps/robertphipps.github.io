@@ -189,6 +189,9 @@ main{ padding:44px 0 60px; flex:1 0 auto; }
 .exp-item p{ margin:0 0 8px; color:var(--ink-soft); font-size:0.82rem; text-indent:-1em; margin-left:1em; }
 .exp-item p::before{ content:"— "; color:var(--ink-faint); }
 .resume-cta{ margin-top:28px; display:inline-block; }
+/* Pages that list items without a rule between them (resume.html, technical-writing.html): the section dividers
+   (.subsection-head underline, .marginalia top rule) stay. */
+.no-item-dividers .exp-item, .no-item-dividers .sample-item{ border-top:none; }
 
 /* ============ WRITING (two-image split) ============ */
 .writing-split{

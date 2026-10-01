@@ -260,11 +260,11 @@
 
   mark.addEventListener("click", function(){
     if(shown){ dismiss(); return; }
-    if(helpState === "open") startTyping();             // the "?" is part of the label: same as clicking the words
+    if(helpState === "open" || helpState === "opening") startTyping();   // clickable mid-animation; the "?" is part of the label: same as clicking the words
     else openHelp();                                    // press on touch devices (or a click that beat the hover)
   });
   bubble.addEventListener("click", function(){
-    if(helpState === "open" && !shown) startTyping();   // the label stays put while the text is typed
+    if((helpState === "open" || helpState === "opening") && !shown) startTyping();   // the label stays put while the text is typed
   });
   document.addEventListener("click", function(e){
     if(!isTouch()) return;
