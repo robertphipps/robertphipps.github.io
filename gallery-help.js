@@ -56,8 +56,10 @@
     var cs  = getComputedStyle(qGlyph);
     var F   = parseFloat(cs.fontSize);
     var gap = parseFloat(getComputedStyle(wrap).getPropertyValue("--help-q-gap")) || 0;
-    var w   = qGlyph.offsetWidth, gH = qGlyph.offsetHeight;
-    var boxW = qBox.offsetWidth, boxH = qBox.offsetHeight;
+    // getBoundingClientRect keeps the fractions (offsetWidth/offsetHeight round to whole pixels, which put the
+    // dot up to half a pixel off on phones and zoomed-in browsers, where text widths are fractional).
+    var gr = qGlyph.getBoundingClientRect(), dr = dotEl.getBoundingClientRect();
+    var w = gr.width, gH = gr.height;
     bubble.style.marginRight = (gap + w) + "px";       // label sits flush against the "?"
     qGlyph.style.clipPath = "";
     try{
@@ -66,8 +68,6 @@
       var font = cs.fontStyle + " " + cs.fontWeight + " " + (F * S) + "px " + cs.fontFamily;
       ctx.font = font;
       var m = ctx.measureText("?");
-      var asc = m.fontBoundingBoxAscent, desc = m.fontBoundingBoxDescent;
-      if(asc == null || desc == null){ asc = F * S * 0.9; desc = F * S * 0.25; }
       cv.width = Math.ceil(m.width) + pad * 2; cv.height = Math.ceil(F * S * 2.4);
       var y0 = Math.ceil(F * S * 1.6);
       ctx.font = font; ctx.textBaseline = "alphabetic"; ctx.fillStyle = "#000";
@@ -92,12 +92,19 @@
       var dotCX = ((minX + maxX + 1) / 2 - pad) / S;           // from the glyph's left edge
       var dotCY = ((dotTop + dotBottom + 1) / 2 - y0) / S;     // from the baseline, down = positive
       var cutY  = (((dotTop + hookBottom + 1) / 2) - y0) / S;  // middle of the gap, from the baseline
-      // Same measurements in the page: baseline inside the glyph's line box, glyph inside the 48px box.
-      var B    = (gH - (asc + desc) / S) / 2 + asc / S;
-      var left = boxW - gap - w, top = (boxH - gH) / 2;
+      // Same measurement in the page: where the baseline really is inside the glyph's line box. Read from layout
+      // with a zero-size inline-block (its bottom edge sits on the baseline) rather than worked out from the
+      // font's ascent/descent, which browsers round differently.
+      var probe = document.createElement("span");
+      probe.style.cssText = "display:inline-block;width:0;height:0;vertical-align:baseline";
+      qGlyph.appendChild(probe);
+      var B = probe.getBoundingClientRect().bottom - gr.top;
+      qGlyph.removeChild(probe);
+      // Both rects are in the same coordinate space, so the offset is simply (where the dot goes) - (where the
+      // bullet is): the bullet is centred in .help-glyph, the dot sits dotCX / B + dotCY inside the glyph's box.
       var bulletD = parseFloat(getComputedStyle(dotEl, "::before").width) || 1;
-      wrap.style.setProperty("--dot-dx", (left + dotCX - boxW / 2) + "px");
-      wrap.style.setProperty("--dot-dy", (top + B + dotCY - boxH / 2) + "px");
+      wrap.style.setProperty("--dot-dx", (gr.left + dotCX - (dr.left + dr.width / 2)) + "px");
+      wrap.style.setProperty("--dot-dy", (gr.top + B + dotCY - (dr.top + dr.height / 2)) + "px");
       wrap.style.setProperty("--dot-s", String(dotD / bulletD));
       var cutPx = B + cutY;                                    // from the top of the glyph box
       if(cutPx > 0 && cutPx < gH) qGlyph.style.clipPath = "inset(0 0 " + (gH - cutPx) + "px 0)";
